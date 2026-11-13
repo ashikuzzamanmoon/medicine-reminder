@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { CreateMedicineSchema } from "@/lib/medicine-schema";
+import { generateDosesForDate } from "@/lib/scheduler";
 
 export async function GET(req: Request) {
   try {
@@ -96,6 +97,13 @@ export async function POST(req: Request) {
         schedules: true,
       },
     });
+
+    // ওষুধ যোগ হওয়ার সাথে সাথে আজকের দিনের ডোজগুলো ইনস্ট্যান্টলি জেনারেট করে নেওয়া
+    try {
+      await generateDosesForDate(new Date());
+    } catch (e) {
+      console.error("Instant dose generation error:", e);
+    }
 
     return NextResponse.json({
       success: true,

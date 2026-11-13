@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { generateDosesForDate } from "@/lib/scheduler";
 
 export async function GET(
   req: Request,
@@ -40,8 +41,8 @@ export async function GET(
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
 
-    // আজকের সব ডোজ বের করা
-    const todayDoses = await db.dose.findMany({
+    // যদি আজকের কোনো ডোজ এখনও তৈরি না হয়ে থাকে, তাহলে স্বয়ংক্রিয়ভাবে তৈরি করে নেওয়া
+    let todayDoses = await db.dose.findMany({
       where: {
         scheduledAt: {
           gte: startOfDay,
@@ -62,6 +63,31 @@ export async function GET(
       },
       orderBy: { scheduledAt: "asc" },
     });
+
+    if (todayDoses.length === 0) {
+      await generateDosesForDate(new Date());
+      todayDoses = await db.dose.findMany({
+        where: {
+          scheduledAt: {
+            gte: startOfDay,
+            lte: endOfDay,
+          },
+          schedule: {
+            medicine: {
+              patientProfileId: profile?.id,
+            },
+          },
+        },
+        include: {
+          schedule: {
+            include: {
+              medicine: true,
+            },
+          },
+        },
+        orderBy: { scheduledAt: "asc" },
+      });
+    }
 
     const totalDoses = todayDoses.length;
     const takenDoses = todayDoses.filter((d) => d.status === "TAKEN" || d.status === "LATE").length;
