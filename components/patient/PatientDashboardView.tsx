@@ -82,6 +82,44 @@ export default function PatientDashboardView({
 
   useEffect(() => {
     loadData();
+
+    // প্রতি ৪ সেকেন্ড পর পর ব্যাকগ্রাউন্ডে স্বয়ংক্রিয় সিঙ্ক (স্ক্রিন দৃশ্যমান থাকা অবস্থায়)
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        loadData();
+      }
+    }, 4000);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        loadData();
+      }
+    };
+
+    const handleFocus = () => {
+      loadData();
+    };
+
+    // একই ডিভাইসে অন্যান্য ট্যাব থেকে তাৎক্ষণিক সিঙ্ক (BroadcastChannel)
+    let channel: BroadcastChannel | null = null;
+    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+      channel = new BroadcastChannel("medicine-sync");
+      channel.onmessage = (event) => {
+        if (event.data?.type === "DOSE_UPDATED") {
+          loadData();
+        }
+      };
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleFocus);
+      channel?.close();
+    };
   }, [loadData]);
 
   // ওষুধ খাওয়া নিশ্চিত করা
@@ -96,6 +134,17 @@ export default function PatientDashboardView({
       if (res.ok) {
         speakText("ওষুধ খাওয়া সম্পন্ন হয়েছে। আলহামদুলিল্লাহ, সুস্থ থাকুন।");
         loadData();
+
+        // রিয়েলটাইম সিঙ্ক ব্রডকাস্ট
+        try {
+          if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+            const bc = new BroadcastChannel("medicine-sync");
+            bc.postMessage({ type: "DOSE_UPDATED", doseId });
+            bc.close();
+          }
+        } catch {
+          // ignore
+        }
       }
     } catch (err) {
       console.error("Dose confirm error:", err);

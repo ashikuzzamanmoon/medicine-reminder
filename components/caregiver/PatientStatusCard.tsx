@@ -65,7 +65,47 @@ export default function PatientStatusCard({ patientId, relation }: { patientId: 
 
   useEffect(() => {
     loadData();
-  }, [loadData]);
+
+    // প্রতি ৪ সেকেন্ড পর পর ব্যাকগ্রাউন্ডে স্বয়ংক্রিয় সিঙ্ক (স্ক্রিন দৃশ্যমান থাকা অবস্থায়)
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible" && !editingMedicineId) {
+        loadData();
+      }
+    }, 4000);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && !editingMedicineId) {
+        loadData();
+      }
+    };
+
+    const handleFocus = () => {
+      if (!editingMedicineId) {
+        loadData();
+      }
+    };
+
+    // একই ডিভাইসে অন্যান্য ট্যাব থেকে তাৎক্ষণিক সিঙ্ক (BroadcastChannel)
+    let channel: BroadcastChannel | null = null;
+    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+      channel = new BroadcastChannel("medicine-sync");
+      channel.onmessage = (event) => {
+        if (event.data?.type === "DOSE_UPDATED" && !editingMedicineId) {
+          loadData();
+        }
+      };
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleFocus);
+      channel?.close();
+    };
+  }, [loadData, editingMedicineId]);
 
   const handleMarkAsTaken = async (doseId: string) => {
     setActionLoading(doseId);
@@ -76,6 +116,17 @@ export default function PatientStatusCard({ patientId, relation }: { patientId: 
         body: JSON.stringify({ status: "TAKEN", confirmedBy: "CAREGIVER" }),
       });
       loadData();
+
+      // রিয়েলটাইম সিঙ্ক ব্রডকাস্ট
+      try {
+        if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+          const bc = new BroadcastChannel("medicine-sync");
+          bc.postMessage({ type: "DOSE_UPDATED", doseId });
+          bc.close();
+        }
+      } catch {
+        // ignore
+      }
     } catch (err) {
       console.error("Mark as taken error:", err);
     } finally {

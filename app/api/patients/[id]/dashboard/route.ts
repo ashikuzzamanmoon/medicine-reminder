@@ -3,6 +3,9 @@ import { db } from "@/lib/db";
 import { generateDosesForDate } from "@/lib/scheduler";
 import { getBangladeshDayBounds } from "@/lib/timezone";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
