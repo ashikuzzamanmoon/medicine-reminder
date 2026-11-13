@@ -12,6 +12,7 @@ model User {
   name          String
   phone         String?   @unique
   email         String?   @unique
+  pin           String?
   image         String?
   role          UserRole  @default(CAREGIVER)
   mode          UserMode  @default(FAMILY)
