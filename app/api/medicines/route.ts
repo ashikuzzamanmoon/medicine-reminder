@@ -52,14 +52,22 @@ export async function POST(req: Request) {
       schedules,
     } = parsed.data;
 
-    // ভেরিফাই করা যে PatientProfile ডাটাবেসে আছে
-    const profile = await db.patientProfile.findUnique({
+    // ভেরিফাই করা যে PatientProfile ডাটাবেসে আছে (id অথবা userId উভয় দিয়েই চেক করা)
+    let profile = await db.patientProfile.findUnique({
       where: { id: patientProfileId },
     });
 
     if (!profile) {
+      profile = await db.patientProfile.findUnique({
+        where: { userId: patientProfileId },
+      });
+    }
+
+    if (!profile) {
       return NextResponse.json({ error: "রোগীর প্রোফাইল পাওয়া যায়নি" }, { status: 404 });
     }
+
+    const targetProfileId = profile.id;
 
     const startDateTime = startDate ? new Date(startDate) : new Date();
     const endDateTime = endDate ? new Date(endDate) : null;
@@ -67,7 +75,7 @@ export async function POST(req: Request) {
     // Medicine ও এর Schedules একই লেনদেনে (Transaction) সেভ করা
     const medicine = await db.medicine.create({
       data: {
-        patientProfileId,
+        patientProfileId: targetProfileId,
         name,
         dose,
         foodTiming,

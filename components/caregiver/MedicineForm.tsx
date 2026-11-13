@@ -146,7 +146,7 @@ export default function MedicineForm() {
             className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all bg-white"
           >
             {patients.map((p) => (
-              <option key={p.id} value={p.id}>
+              <option key={p.id} value={p.profileId || p.id}>
                 {p.name} ({p.relation})
               </option>
             ))}

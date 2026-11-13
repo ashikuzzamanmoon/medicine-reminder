@@ -54,6 +54,7 @@ export async function GET() {
         });
         return {
           id: link.patient.id,
+          profileId: profile?.id ?? link.patient.id,
           name: link.patient.name,
           phone: link.patient.phone,
           relation: link.relation,
