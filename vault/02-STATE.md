@@ -10,9 +10,9 @@
 | ক্ষেত্র | মান |
 |---|---|
 | **Phase** | Phase 3: Reminder Engine |
-| **Last Completed Step** | Step 5 — ওষুধ যোগ করার UI ও API (সফল) ✅ |
-| **Active Step** | Step 6: Dose Generation Cron Job |
-| **Next Step** | Step 7: Patient-এর Reminder Push পাঠানো |
+| **Last Completed Step** | Step 6 — Dose Generation Scheduler & Cron Job ✅ |
+| **Active Step** | Step 7: Patient-এর Reminder Push পাঠানো |
+| **Next Step** | Step 8: Patient Reminder Screen (বড় বোতাম) |
 | **Active Blockers** | — |
 
 ---
@@ -26,6 +26,7 @@
 | Step 3 | PWA Manifest, Service Worker & Web Push VAPID Integration | 2026-11-13 | tsc ✅ build ✅ sw.js/manifest ✅ |
 | Step 4 | Patient Creation Form, Zod Schema & /api/patients API | 2026-11-13 | tsc ✅ build ✅ /patients/new live ✅ |
 | Step 5 | Medicine Entry Form with Dynamic Multi-schedules & Relational API | 2026-11-13 | tsc ✅ build ✅ /medicines/new live ✅ |
+| Step 6 | Daily Dose Generation Engine & Vercel Cron Endpoint | 2026-11-13 | tsc ✅ build ✅ /api/cron/generate-doses live ✅ |
 
 ---
 

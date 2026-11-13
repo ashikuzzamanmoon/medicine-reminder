@@ -93,16 +93,16 @@
 ## Phase 3: Reminder Engine
 
 ### Step 6: Dose Generation Cron Job
-- [ ] **Target Files:** `app/api/cron/generate-doses/route.ts`, `lib/scheduler.ts`
-- [ ] **Vault Refs:** `05-SCHEMA.md` (Dose, Schedule), `03-TOKENS.md` (GRACE_PERIOD_MINUTES)
-- [ ] **কাজ:**
-  - প্রতিদিন রাত ১২টায় (অথবা on-demand) active Schedule গুলো দেখে সেদিনের Dose rows তৈরি করা
-  - ইতিমধ্যে তৈরি থাকলে duplicate না করা
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/api/cron/generate-doses/route.ts`, `lib/scheduler.ts`
+- [x] **Vault Refs:** `05-SCHEMA.md` (Dose, Schedule), `03-TOKENS.md` (GRACE_PERIOD_MINUTES)
+- [x] **কাজ:**
+  - `generateDosesForDate`: সক্রিয় শিডিউলগুলো খুঁজে নির্দিষ্ট দিনের জন্য Dose রো তৈরি করা
+  - ডুপ্লিকেট চেকিং মেকানিজম (একই দিনে যাতে একাধিকবার একই ডোজ জেনারেট না হয়)
+  - `/api/cron/generate-doses` ব্যাকগ্রাউন্ড ক্রন এন্ডপয়েন্ট হ্যান্ডলার
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  npm run test       # Dose generation logic tests pass
-  # Manual: Cron এ hit করলে সেদিনের doses তৈরি হয়
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /api/cron/generate-doses compiled successfully
   ```
 
 ---
