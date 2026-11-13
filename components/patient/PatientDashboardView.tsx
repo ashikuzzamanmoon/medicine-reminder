@@ -136,12 +136,21 @@ export default function PatientDashboardView({
               আমার ওষুধ
             </span>
           </div>
-          <button
-            onClick={handleLogout}
-            className="px-3.5 py-1.5 text-xs font-bold text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors border border-gray-200"
-          >
-            🚪 লগআউট
-          </button>
+          <div className="flex items-center gap-2">
+            <a
+              href="/onboarding"
+              className="px-2.5 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-100/70 hover:bg-emerald-200 rounded-xl transition-colors"
+              title="Self Mode বা Family Mode পরিবর্তন করুন"
+            >
+              🔄 মোড
+            </a>
+            <button
+              onClick={handleLogout}
+              className="px-3 py-1.5 text-xs font-bold text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors border border-gray-200"
+            >
+              🚪 লগআউট
+            </button>
+          </div>
         </div>
       </header>
 

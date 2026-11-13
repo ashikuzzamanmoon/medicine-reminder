@@ -42,6 +42,15 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="max-w-xl w-full bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100">
+        <div className="mb-4">
+          <a
+            href="/dashboard"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-gray-500 hover:text-green-700 transition-colors"
+          >
+            ← ড্যাশবোর্ডে ফিরে যান
+          </a>
+        </div>
+
         <div className="text-center mb-8">
           <span className="text-4xl mb-2 block">👋</span>
           <h1 className="text-3xl font-extrabold text-gray-900">স্বাগতম!</h1>

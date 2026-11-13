@@ -57,22 +57,27 @@ export async function POST(req: Request) {
             age: selfPatientAge || null,
           },
         });
-
-        await db.caregiverPatient.upsert({
-          where: {
-            caregiverId_patientId: {
-              caregiverId: user.id,
-              patientId: user.id,
-            },
-          },
-          update: {},
-          create: {
-            caregiverId: user.id,
-            patientId: user.id,
-            relation: "নিজে",
-          },
+      } else if (selfPatientAge) {
+        await db.patientProfile.update({
+          where: { userId: user.id },
+          data: { age: selfPatientAge },
         });
       }
+
+      await db.caregiverPatient.upsert({
+        where: {
+          caregiverId_patientId: {
+            caregiverId: user.id,
+            patientId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          caregiverId: user.id,
+          patientId: user.id,
+          relation: "নিজে",
+        },
+      });
     }
 
     return NextResponse.json({
