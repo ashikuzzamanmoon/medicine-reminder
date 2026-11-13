@@ -8,19 +8,19 @@
 ## Phase 1: Project Foundation
 
 ### Step 1: Next.js প্রজেক্ট ইনিশিয়ালাইজ ও Prisma সেটআপ
-- [ ] **Target Files:** `package.json`, `tsconfig.json`, `prisma/schema.prisma`, `.env.local`
-- [ ] **Vault Refs:** `04-STACK.md`, `05-SCHEMA.md`
-- [ ] **কাজ:**
+- [x] **Target Files:** `package.json`, `tsconfig.json`, `prisma/schema.prisma`, `.env.local`
+- [x] **Vault Refs:** `04-STACK.md`, `05-SCHEMA.md`
+- [x] **কাজ:**
   - `npx create-next-app@latest medicine-reminder --typescript --tailwind --app --src-dir=false`
   - Prisma install ও `schema.prisma` পূর্ণ schema দিয়ে লেখা (05-SCHEMA থেকে)
   - `.env.local` তৈরি (placeholder values)
   - Neon DB কানেক্ট ও `npx prisma db push`
-- [ ] **Verification Gate:**
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit      # 0 errors
-  npx prisma validate   # Schema valid
-  npx prisma db push    # Tables created
-  npm run build         # Build succeeds
+  npx tsc --noEmit      # ✅ 0 errors
+  npx prisma validate   # ✅ Schema valid
+  npx prisma db push    # ✅ Tables created on Neon
+  npm run build         # ✅ Build succeeded
   ```
 
 ---

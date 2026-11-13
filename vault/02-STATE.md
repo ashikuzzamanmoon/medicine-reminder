@@ -9,10 +9,10 @@
 
 | ক্ষেত্র | মান |
 |---|---|
-| **Phase** | Planning — Vault লক করা হচ্ছে |
-| **Last Completed Step** | — (শুরু হয়নি) |
-| **Active Step** | Vault 01–06 লেখা ও লক করা |
-| **Next Step** | Step 1: Next.js প্রজেক্ট ইনিশিয়ালাইজ ও Prisma সেটআপ |
+| **Phase** | Phase 1: Project Foundation |
+| **Last Completed Step** | Step 1 — Next.js + Prisma সেটআপ ✅ |
+| **Active Step** | Step 2: NextAuth.js সেটআপ |
+| **Next Step** | Step 3: PWA + Web Push VAPID |
 | **Active Blockers** | — |
 
 ---
@@ -21,7 +21,7 @@
 
 | Step | বিবরণ | তারিখ | Verification |
 |---|---|---|---|
-| — | — | — | — |
+| Step 1 | Next.js 14 + Prisma v5 + Neon DB সেটআপ | 2026-11-13 | tsc ✅ validate ✅ db push ✅ build ✅ |
 
 ---
 

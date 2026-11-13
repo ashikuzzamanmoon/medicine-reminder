@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  phone         String?   @unique
+  email         String?   @unique
+  image         String?
+  role          UserRole  @default(CAREGIVER)
+  mode          UserMode  @default(FAMILY)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  caregiverLinks    CaregiverPatient[] @relation("CaregiverLinks")
+  patientLinks      CaregiverPatient[] @relation("PatientLinks")
+  pushSubscriptions PushSubscription[]
+  accounts          Account[]
+  sessions          Session[]
+}
+
+enum UserRole {
+  CAREGIVER
+  PATIENT
+}
+
+enum UserMode {
+  SELF
+  FAMILY
+}
+
+model CaregiverPatient {
+  id          String   @id @default(cuid())
+  caregiver   User     @relation("CaregiverLinks", fields: [caregiverId], references: [id])
+  caregiverId String
+  patient     User     @relation("PatientLinks", fields: [patientId], references: [id])
+  patientId   String
+  relation    String
+  isBackup    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@unique([caregiverId, patientId])
+}
+
+model PatientProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  age       Int?
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  medicines Medicine[]
+}
+
+model Medicine {
+  id               String         @id @default(cuid())
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id])
+  patientProfileId String
+  name             String
+  dose             String
+  foodTiming       FoodTiming     @default(AFTER)
+  stockCount       Int?
+  prescriptionUrl  String?
+  isActive         Boolean        @default(true)
+  notes            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  schedules Schedule[]
+}
+
+enum FoodTiming {
+  BEFORE
+  AFTER
+  ANY
+}
+
+model Schedule {
+  id         String     @id @default(cuid())
+  medicine   Medicine   @relation(fields: [medicineId], references: [id])
+  medicineId String
+  time       String
+  label      String?
+  repeatType RepeatType @default(DAILY)
+  startDate  DateTime
+  endDate    DateTime?
+  isActive   Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+
+  doses Dose[]
+}
+
+enum RepeatType {
+  DAILY
+  SPECIFIC_DAYS
+}
+
+model Dose {
+  id            String     @id @default(cuid())
+  schedule      Schedule   @relation(fields: [scheduleId], references: [id])
+  scheduleId    String
+  scheduledAt   DateTime
+  status        DoseStatus @default(PENDING)
+  confirmedAt   DateTime?
+  confirmedBy   String?
+  skippedReason String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  alerts Alert[]
+}
+
+enum DoseStatus {
+  PENDING
+  TAKEN
+  LATE
+  MISSED
+  SKIPPED
+}
+
+model Alert {
+  id        String    @id @default(cuid())
+  dose      Dose      @relation(fields: [doseId], references: [id])
+  doseId    String
+  userId    String
+  type      AlertType
+  sentAt    DateTime  @default(now())
+  readAt    DateTime?
+  delivered Boolean   @default(false)
+}
+
+enum AlertType {
+  MISSED_FIRST
+  MISSED_ESCALATION
+  REFILL_LOW
+  DOSE_CONFIRMED
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+}
+
+model Pharmacy {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  area      String
+  phone     String
+  whatsapp  String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
