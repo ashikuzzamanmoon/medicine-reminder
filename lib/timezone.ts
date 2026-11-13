@@ -48,3 +48,45 @@ export function getBangladeshDateTime(
 
   return new Date(`${dateStr}T${hours}:${minutes}:00+06:00`);
 }
+
+/**
+ * ২৪ ঘণ্টার "HH:mm" ফরম্যাটকে ১২ ঘণ্টার বাংলা সময়ে রূপান্তর করে।
+ * উদাহরণ:
+ * "08:00" -> "সকাল ৮:০০"
+ * "13:00" -> "দুপুর ১:০০"
+ * "16:30" -> "বিকাল ৪:৩০"
+ * "18:25" -> "সন্ধ্যা ৬:২৫"
+ * "20:00" -> "রাত ৮:০০"
+ */
+export function formatBanglaTime(timeStr: string): string {
+  if (!timeStr) return "";
+  const [hoursStr, minutesStr] = timeStr.split(":");
+  const hours = parseInt(hoursStr, 10);
+  const minutes = parseInt(minutesStr || "0", 10);
+  if (isNaN(hours)) return timeStr;
+
+  let period = "সকাল";
+  if (hours >= 0 && hours < 5) period = "রাত";
+  else if (hours >= 5 && hours < 12) period = "সকাল";
+  else if (hours >= 12 && hours < 16) period = "দুপুর";
+  else if (hours >= 16 && hours < 18) period = "বিকাল";
+  else if (hours >= 18 && hours < 20) period = "সন্ধ্যা";
+  else period = "রাত";
+
+  const displayHours = hours % 12 === 0 ? 12 : hours % 12;
+
+  const toBn = (n: number | string) => {
+    const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return n
+      .toString()
+      .split("")
+      .map((d) => bnDigits[parseInt(d, 10)] ?? d)
+      .join("");
+  };
+
+  const hoursBn = toBn(displayHours);
+  const minutesBn = minutes < 10 ? `০${toBn(minutes)}` : toBn(minutes);
+
+  return `${period} ${hoursBn}:${minutesBn}`;
+}
+

@@ -16,6 +16,7 @@ export async function GET() {
     const pendingDoses = await db.dose.findMany({
       where: {
         status: "PENDING",
+        reminderSentAt: null,
         scheduledAt: {
           gte: windowStart,
           lte: now,
@@ -120,6 +121,12 @@ export async function GET() {
           sentCount++;
         }
       }
+
+      // একবার পুশ পাঠানো হলে Dose-এ reminderSentAt সেভ করা যাতে প্রতি মিনিটে স্প্যাম নোটিফিকেশন না পাঠায়
+      await db.dose.update({
+        where: { id: dose.id },
+        data: { reminderSentAt: new Date() },
+      });
     }
 
     return NextResponse.json({

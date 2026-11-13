@@ -104,16 +104,17 @@ enum RepeatType {
 }
 
 model Dose {
-  id            String     @id @default(cuid())
-  schedule      Schedule   @relation(fields: [scheduleId], references: [id])
-  scheduleId    String
-  scheduledAt   DateTime
-  status        DoseStatus @default(PENDING)
-  confirmedAt   DateTime?
-  confirmedBy   String?
-  skippedReason String?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id             String     @id @default(cuid())
+  schedule       Schedule   @relation(fields: [scheduleId], references: [id])
+  scheduleId     String
+  scheduledAt    DateTime
+  reminderSentAt DateTime?
+  status         DoseStatus @default(PENDING)
+  confirmedAt    DateTime?
+  confirmedBy    String?
+  skippedReason  String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
   alerts Alert[]
 }

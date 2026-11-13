@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { formatBanglaTime } from "@/lib/timezone";
 
 interface PatientOption {
   id: string;
@@ -234,31 +235,38 @@ export default function MedicineForm() {
 
         <div className="space-y-3">
           {schedules.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-200">
-              <input
-                type="text"
-                placeholder="লেবেল (যেমন: সকাল)"
-                value={item.label}
-                onChange={(e) => updateSchedule(idx, "label", e.target.value)}
-                className="w-1/3 px-3 py-2 bg-white rounded-lg border border-gray-300 text-sm outline-none"
-              />
-              <input
-                type="time"
-                required
-                value={item.time}
-                onChange={(e) => updateSchedule(idx, "time", e.target.value)}
-                className="w-1/2 px-3 py-2 bg-white rounded-lg border border-gray-300 text-sm outline-none font-semibold"
-              />
-              {schedules.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeScheduleTime(idx)}
-                  className="text-red-500 hover:text-red-700 p-2 text-sm"
-                  title="মুছে ফেলুন"
-                >
-                  ✕
-                </button>
-              )}
+            <div key={idx} className="p-3 bg-gray-50 rounded-2xl border border-gray-200 flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="time"
+                  required
+                  value={item.time}
+                  onChange={(e) => updateSchedule(idx, "time", e.target.value)}
+                  className="w-36 px-3 py-2 bg-white rounded-xl border border-gray-300 text-sm outline-none font-bold text-gray-800"
+                />
+                <input
+                  type="text"
+                  placeholder="লেবেল (যেমন: সকাল)"
+                  value={item.label}
+                  onChange={(e) => updateSchedule(idx, "label", e.target.value)}
+                  className="flex-1 px-3 py-2 bg-white rounded-xl border border-gray-300 text-sm outline-none"
+                />
+                {schedules.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeScheduleTime(idx)}
+                    className="text-red-500 hover:text-red-700 p-2 text-sm font-bold"
+                    title="মুছে ফেলুন"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+              {/* Live 12-hour Bangla preview */}
+              <div className="text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 w-fit">
+                <span>🕒 বাংলা সময়:</span>
+                <span className="font-bold">{formatBanglaTime(item.time)}</span>
+              </div>
             </div>
           ))}
         </div>

@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { formatBanglaTime } from "@/lib/timezone";
+import EditMedicineModal from "./EditMedicineModal";
 
 interface PatientDashboardData {
   patient: {
@@ -45,6 +47,7 @@ export default function PatientStatusCard({ patientId, relation }: { patientId: 
   const [data, setData] = useState<PatientDashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [editingMedicineId, setEditingMedicineId] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -169,9 +172,14 @@ export default function PatientStatusCard({ patientId, relation }: { patientId: 
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-gray-500 mt-1 flex-wrap">
-                    <span className="font-medium whitespace-nowrap">
-                      সময়: {dose.schedule.time} {dose.schedule.label ? `(${dose.schedule.label})` : ""}
+                    <span className="font-semibold text-gray-700 whitespace-nowrap bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-md">
+                      🕒 {formatBanglaTime(dose.schedule.time)}
                     </span>
+                    {dose.schedule.label && (
+                      <span className="text-gray-400 font-normal">
+                        ({dose.schedule.label})
+                      </span>
+                    )}
                     {dose.schedule.medicine.stockCount !== null && (
                       <span className={`font-semibold whitespace-nowrap ${dose.schedule.medicine.stockCount <= 5 ? "text-red-500" : "text-gray-500"}`}>
                         • স্টক: {dose.schedule.medicine.stockCount}টি
@@ -182,6 +190,14 @@ export default function PatientStatusCard({ patientId, relation }: { patientId: 
 
                 {/* Right: Actions */}
                 <div className="flex items-center gap-2 justify-end sm:justify-start shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-50">
+                  <button
+                    type="button"
+                    onClick={() => setEditingMedicineId(dose.schedule.medicine.id)}
+                    className="px-2.5 py-1.5 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors whitespace-nowrap flex items-center gap-1"
+                    title="ওষুধ ও সময় পরিবর্তন করুন"
+                  >
+                    ✏️ এডিট
+                  </button>
                   <Link
                     href={`/reminder?doseId=${dose.id}`}
                     target="_blank"
@@ -209,6 +225,15 @@ export default function PatientStatusCard({ patientId, relation }: { patientId: 
           </div>
         )}
       </div>
+
+      {/* Edit Medicine Modal */}
+      {editingMedicineId && (
+        <EditMedicineModal
+          medicineId={editingMedicineId}
+          onClose={() => setEditingMedicineId(null)}
+          onSuccess={loadData}
+        />
+      )}
     </div>
   );
 }

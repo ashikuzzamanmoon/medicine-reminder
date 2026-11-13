@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { formatBanglaTime } from "@/lib/timezone";
 
 interface HistoryDose {
   id: string;
@@ -149,10 +150,10 @@ export default function HistoryPage() {
                       </span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      নির্ধারিত সময়: {new Date(dose.scheduledAt).toLocaleDateString("bn-BD")} • {dose.schedule.time}
+                      নির্ধারিত সময়: {new Date(dose.scheduledAt).toLocaleDateString("bn-BD")} • {formatBanglaTime(dose.schedule.time)}
                       {dose.confirmedAt && (
                         <span className="ml-2 text-gray-600">
-                          (খাওয়ার সময়: {new Date(dose.confirmedAt).toLocaleTimeString("bn-BD")})
+                          (খাওয়ার সময়: {new Date(dose.confirmedAt).toLocaleTimeString("bn-BD", { hour: "numeric", minute: "numeric", hour12: true })})
                         </span>
                       )}
                     </p>

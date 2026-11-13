@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { formatBanglaTime } from "@/lib/timezone";
 
 interface DoseDetails {
   id: string;
@@ -117,7 +118,7 @@ export default function ReminderCard({ doseId }: { doseId: string }) {
       {/* Top Banner */}
       <div className="bg-green-600 text-white p-6 sm:p-8 text-center">
         <span className="inline-block bg-green-700/60 px-4 py-1.5 rounded-full text-base font-medium mb-3">
-          {dose.schedule.label ? `${dose.schedule.label}র ওষুধ` : "নির্ধারিত সময়"} • {dose.schedule.time}
+          🕒 {formatBanglaTime(dose.schedule.time)} {dose.schedule.label ? `(${dose.schedule.label})` : ""}
         </span>
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">{medicine.name}</h1>
         <p className="text-xl text-green-100 mt-2 font-semibold">ডোজ: {medicine.dose}</p>
