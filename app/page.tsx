@@ -1,100 +1,85 @@
-import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-between">
+      {/* Navbar */}
+      <header className="bg-white border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">💊</span>
+            <span className="text-xl font-black text-gray-900 tracking-tight">ওষুধ রিমাইন্ডার</span>
+          </div>
+          <Link
+            href="/dashboard"
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded-xl transition-all shadow-sm"
+          >
+            ড্যাশবোর্ড
+          </Link>
+        </div>
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* Hero Section */}
+      <main className="max-w-4xl mx-auto px-4 py-16 text-center my-auto">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-100 text-green-800 text-xs font-bold rounded-full mb-6">
+          <span>🇧🇩 বাংলাদেশের বাস্তবতায় পরিবার-চালিত সমাধান</span>
+        </div>
+
+        <h1 className="text-4xl sm:text-6xl font-black text-gray-900 tracking-tight leading-tight mb-6">
+          বাবা-মার ওষুধ মিস হলে <br />
+          <span className="text-green-600">মুহূর্তেই পরিবারের কাছে অ্যালার্ট</span>
+        </h1>
+
+        <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+          পরিবারের একজন ওষুধের সময়সূচি বসাবে, রোগী এক ট্যাপে &quot;খেয়েছি&quot; বলবে, আর না খেলে ছেলেমেয়ের কাছে নোটিফিকেশন চলে যাবে।
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+          <Link
+            href="/onboarding"
+            className="w-full sm:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl text-lg shadow-lg shadow-green-600/30 transition-all active:scale-[0.98]"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            ব্যবহার শুরু করুন 🚀
+          </Link>
+          <Link
+            href="/prescriptions/review"
+            className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-gray-100 border border-gray-300 text-gray-800 font-bold rounded-2xl text-lg transition-all"
           >
-            Read our docs
-          </a>
+            📸 প্রেসক্রিপশন স্ক্যান
+          </Link>
+        </div>
+
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-20 text-left">
+          <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            <span className="text-3xl mb-3 block">🔔</span>
+            <h3 className="font-bold text-gray-900 text-lg mb-1">পরিবার-কেন্দ্রিক লুপ</h3>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              নির্ধারিত সময়ের ৩০ মিনিটে কনফার্ম না করলে কেয়ারগিভারদের কাছে স্বয়ংক্রিয় মিসড অ্যালার্ট পৌঁছে যায়।
+            </p>
+          </div>
+
+          <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            <span className="text-3xl mb-3 block">👵</span>
+            <h3 className="font-bold text-gray-900 text-lg mb-1">সহজ ও বড় বোতাম</h3>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              বয়স্কদের সুবিধার্থে ৮০px বড় বোতাম, সহজ বাংলা ইন্টারফেস ও বাংলা ভয়েস রিমাইন্ডার সিস্টেম।
+            </p>
+          </div>
+
+          <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            <span className="text-3xl mb-3 block">📦</span>
+            <h3 className="font-bold text-gray-900 text-lg mb-1">রিফিল ও WhatsApp অর্ডার</h3>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              ওষুধ শেষ হওয়ার ৫ দিন আগেই অ্যালার্ট এবং কাছের ফার্মেসিতে এক ক্লিকে WhatsApp-এ রিফিল অর্ডার।
+            </p>
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-100 py-6 text-center text-xs text-gray-400">
+        © 2026 ওষুধ রিমাইন্ডার • পরিবার-চালিত ওষুধের দেখাশোনা প্ল্যাটফর্ম
       </footer>
     </div>
   );
