@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { formatBanglaTime, formatBanglaVoiceTime } from "@/lib/timezone";
+import { speakBangla } from "@/lib/speech";
 
 interface DoseDetails {
   id: string;
@@ -26,12 +27,7 @@ export default function ReminderCard({ doseId }: { doseId: string }) {
   const [message, setMessage] = useState<{ type: "success" | "info" | "error"; text: string } | null>(null);
 
   const speakReminder = useCallback((text: string) => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "bn-BD";
-      utterance.rate = 0.9;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakBangla(text);
   }, []);
 
   useEffect(() => {

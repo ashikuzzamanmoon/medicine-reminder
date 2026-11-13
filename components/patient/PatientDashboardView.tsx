@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import PushNotificationManager from "@/components/PushNotificationManager";
 import { formatBanglaTime, formatBanglaVoiceTime } from "@/lib/timezone";
+import { speakBangla } from "@/lib/speech";
 
 interface PatientDashboardData {
   patient: {
@@ -103,19 +104,19 @@ export default function PatientDashboardView({
     }
   };
 
-  // বাংলা ভয়েসে পড়ে শুনানো
+  // বাংলা ভয়েসে পড়ে শুনানো (মোবাইল ও পিসিতে স্পষ্ট উচ্চারণ)
   const speakText = (text: string, doseId?: string) => {
-    if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    if (doseId) setSpeakingDoseId(doseId);
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "bn-BD";
-    utterance.rate = 0.9;
-    utterance.onend = () => setSpeakingDoseId(null);
-    utterance.onerror = () => setSpeakingDoseId(null);
-
-    window.speechSynthesis.speak(utterance);
+    speakBangla(text, {
+      onStart: () => {
+        if (doseId) setSpeakingDoseId(doseId);
+      },
+      onEnd: () => {
+        setSpeakingDoseId(null);
+      },
+      onError: () => {
+        setSpeakingDoseId(null);
+      },
+    });
   };
 
   const handleLogout = async () => {
