@@ -29,6 +29,31 @@ export async function GET() {
       return NextResponse.json({ error: "লগইন করা প্রয়োজন" }, { status: 401 });
     }
 
+    const currentUser = {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+      mode: user.mode,
+      phone: user.phone,
+    };
+
+    // যদি ব্যবহারকারী নিজেই রোগী হন (PATIENT রোল)
+    if (user.role === "PATIENT") {
+      const myProfile = await db.patientProfile.findUnique({
+        where: { userId: user.id },
+      });
+
+      return NextResponse.json({
+        success: true,
+        currentUser,
+        isPatient: true,
+        patientId: user.id,
+        patientProfileId: myProfile?.id || null,
+        name: user.name,
+        patients: [],
+      });
+    }
+
     // কেয়ারগিভারের সব রোগীকে বের করা
     const links = await db.caregiverPatient.findMany({
       where: { caregiverId: user.id },
@@ -95,7 +120,12 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({ success: true, patients });
+    return NextResponse.json({
+      success: true,
+      currentUser,
+      isPatient: false,
+      patients,
+    });
   } catch (error) {
     console.error("GET /api/patients error:", error);
     return NextResponse.json({ error: "রোগীদের তালিকা লোড করতে ব্যর্থ" }, { status: 500 });

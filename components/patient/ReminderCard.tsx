@@ -43,8 +43,16 @@ export default function ReminderCard({ doseId }: { doseId: string }) {
           setDose(data.dose);
           const medicine = data.dose.schedule.medicine;
           const timing = medicine.foodTiming === "BEFORE" ? "খাবারের আগে" : medicine.foodTiming === "AFTER" ? "খাবারের পরে" : "";
-          const text = `এখন আপনার ${medicine.name} খাওয়ার সময়। ডোজ ${medicine.dose}। ${timing}`;
-          speakReminder(text);
+
+          // শুধুমাত্র যদি ডোজটি এখনও PENDING থাকে এবং নির্ধারিত সময় পার হয়ে গেছে বা বর্তমান সময় হয়েছে, তবেই স্বয়ংক্রিয়ভাবে বলবে
+          const scheduledTime = new Date(data.dose.scheduledAt).getTime();
+          const now = Date.now();
+          const isDue = now >= (scheduledTime - 15 * 60 * 1000); // ১৫ মিনিট আগে থেকে
+
+          if (data.dose.status === "PENDING" && isDue) {
+            const text = `এখন আপনার ${medicine.name} খাওয়ার সময়। ডোজ ${medicine.dose}। ${timing}`;
+            speakReminder(text);
+          }
         }
       } catch (err) {
         console.error("Failed to load dose details:", err);
@@ -156,8 +164,23 @@ export default function ReminderCard({ doseId }: { doseId: string }) {
           </div>
         )}
 
-        {/* Large Action Buttons (Non-negotiable rule: height >= 60px, font >= 18px) */}
-        {!message ? (
+        {/* If already taken or action completed */}
+        {dose.status === "TAKEN" || dose.status === "LATE" || message ? (
+          <div className="pt-4 text-center space-y-4">
+            {!message && (
+              <div className="p-4 bg-emerald-100 text-emerald-900 rounded-2xl font-bold text-base sm:text-lg border border-emerald-300">
+                ✅ এই ওষুধটি ইতিমধ্যে খাওয়া সম্পন্ন হয়েছে!
+              </div>
+            )}
+            <a
+              href="/dashboard"
+              className="inline-block w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-black text-lg shadow-md transition-colors"
+            >
+              ড্যাশবোর্ডে ফিরে যান →
+            </a>
+          </div>
+        ) : (
+          /* Large Action Buttons */
           <div className="space-y-4 pt-2">
             {/* Primary Action Button: "খেয়েছি" */}
             <button
@@ -187,12 +210,6 @@ export default function ReminderCard({ doseId }: { doseId: string }) {
             >
               আজকে খাবো না
             </button>
-          </div>
-        ) : (
-          <div className="pt-4 text-center">
-            <a href="/" className="inline-block px-8 py-4 bg-gray-900 text-white rounded-xl font-bold text-lg">
-              হোমে যান
-            </a>
           </div>
         )}
       </div>

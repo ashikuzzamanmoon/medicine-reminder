@@ -98,6 +98,23 @@ export async function GET(
     const missedDoses = todayDoses.filter((d) => d.status === "MISSED").length;
     const pendingDoses = todayDoses.filter((d) => d.status === "PENDING").length;
 
+    // কেয়ারগিভার লিংক বের করা (যদি থাকে)
+    const targetUserId = patient?.id ?? profile?.userId;
+    const caregiverLink = targetUserId
+      ? await db.caregiverPatient.findFirst({
+          where: { patientId: targetUserId },
+          include: { caregiver: true },
+        })
+      : null;
+
+    const caregiverInfo = caregiverLink
+      ? {
+          name: caregiverLink.caregiver.name,
+          phone: caregiverLink.caregiver.phone,
+          relation: caregiverLink.relation,
+        }
+      : null;
+
     return NextResponse.json({
       success: true,
       patient: {
@@ -106,6 +123,7 @@ export async function GET(
         phone: patientPhone,
         age: profile?.age ?? null,
       },
+      caregiver: caregiverInfo,
       summary: {
         total: totalDoses,
         taken: takenDoses,

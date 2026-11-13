@@ -193,19 +193,11 @@ export default function PatientStatusCard({ patientId, relation }: { patientId: 
                   <button
                     type="button"
                     onClick={() => setEditingMedicineId(dose.schedule.medicine.id)}
-                    className="px-2.5 py-1.5 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors whitespace-nowrap flex items-center gap-1"
+                    className="px-3 py-1.5 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors whitespace-nowrap flex items-center gap-1"
                     title="ওষুধ ও সময় পরিবর্তন করুন"
                   >
                     ✏️ এডিট
                   </button>
-                  <Link
-                    href={`/reminder?doseId=${dose.id}`}
-                    target="_blank"
-                    className="px-3 py-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-xl border border-emerald-200 transition-colors whitespace-nowrap"
-                    title="রোগীর জন্য বড় বোতাম ও ভয়েস স্ক্রিন দেখুন"
-                  >
-                    রোগীর স্ক্রিন 📱
-                  </Link>
                   {dose.status === "TAKEN" || dose.status === "LATE" ? (
                     <span className="px-3.5 py-1.5 bg-emerald-100 text-emerald-800 font-extrabold text-xs rounded-xl flex items-center gap-1.5 whitespace-nowrap">
                       ✅ খাওয়া হয়েছে

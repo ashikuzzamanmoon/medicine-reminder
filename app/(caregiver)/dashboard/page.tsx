@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PatientStatusCard from "@/components/caregiver/PatientStatusCard";
+import PatientDashboardView from "@/components/patient/PatientDashboardView";
 import PushNotificationManager from "@/components/PushNotificationManager";
 
 interface PatientListItem {
@@ -16,13 +17,19 @@ interface PatientListItem {
 export default function CaregiverDashboardPage() {
   const [patients, setPatients] = useState<PatientListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isPatient, setIsPatient] = useState(false);
+  const [patientInfo, setPatientInfo] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
     async function fetchPatients() {
       try {
         const res = await fetch("/api/patients");
         const data = await res.json();
-        if (data.patients) {
+
+        if (data.isPatient) {
+          setIsPatient(true);
+          setPatientInfo({ id: data.patientId, name: data.name });
+        } else if (data.patients) {
           setPatients(data.patients);
         }
       } catch (err) {
@@ -40,6 +47,11 @@ export default function CaregiverDashboardPage() {
       window.location.href = "/login";
     }
   };
+
+  // যদি লগইনকৃত ইউজার সরাসরি রোগী হন, তবে তাকে ডেডিকেটেড সহজ "রোগীর ড্যাশবোর্ড" দেখানো হবে
+  if (!loading && isPatient && patientInfo) {
+    return <PatientDashboardView patientId={patientInfo.id} userName={patientInfo.name} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50/70 pb-16">
