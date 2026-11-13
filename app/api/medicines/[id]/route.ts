@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { generateDosesForDate } from "@/lib/scheduler";
-import { getBangladeshDayBounds } from "@/lib/timezone";
+import { getBangladeshDayBounds, getBangladeshDateTime } from "@/lib/timezone";
 
 // নির্দিষ্ট ওষুধের তথ্য পাওয়া
 export async function GET(
@@ -15,6 +14,7 @@ export async function GET(
       include: {
         schedules: {
           where: { isActive: true },
+          orderBy: { time: "asc" },
         },
       },
     });
@@ -48,7 +48,12 @@ export async function PUT(
 
     const existing = await db.medicine.findUnique({
       where: { id: medicineId },
-      include: { schedules: true },
+      include: {
+        schedules: {
+          where: { isActive: true },
+          orderBy: { createdAt: "asc" },
+        },
+      },
     });
 
     if (!existing) {
@@ -65,49 +70,99 @@ export async function PUT(
         name: name ?? existing.name,
         dose: dose ?? existing.dose,
         foodTiming: foodTiming ?? existing.foodTiming,
-        stockCount: stockCount !== undefined ? (stockCount === null ? null : parseInt(stockCount, 10)) : existing.stockCount,
+        stockCount:
+          stockCount !== undefined
+            ? stockCount === null
+              ? null
+              : parseInt(stockCount, 10)
+            : existing.stockCount,
         notes: notes !== undefined ? notes : existing.notes,
       },
     });
 
-    // ২. যদি নতুন শিডিউল পাঠানো হয়
+    // ২. শিডিউল নিরাপদে আপডেট করা (Foreign Key ভায়োলেশন এড়াতে)
     if (Array.isArray(schedules) && schedules.length > 0) {
-      // পুরাতন শিডিউলগুলোর আইডি সংগ্রহ
-      const oldScheduleIds = existing.schedules.map((s) => s.id);
-
-      // আজকের দিনে যেসব পেন্ডিং ডোজ আছে সেগুলো ডিলিট করা যাতে নতুন সময়ের সাথে রি-জেনারেট হয়
+      const existingSchedules = existing.schedules;
       const { startOfDay, endOfDay } = getBangladeshDayBounds();
-      await db.dose.deleteMany({
-        where: {
-          scheduleId: { in: oldScheduleIds },
-          status: "PENDING",
-          scheduledAt: {
-            gte: startOfDay,
-            lte: endOfDay,
-          },
-        },
-      });
 
-      // পুরাতন সব শিডিউল নিষ্ক্রিয় (বা মুছে) ফেলা
-      await db.schedule.deleteMany({
-        where: { medicineId },
-      });
+      for (let i = 0; i < schedules.length; i++) {
+        const item = schedules[i];
 
-      // নতুন শিডিউল যোগ করা
-      const now = new Date();
-      await db.schedule.createMany({
-        data: schedules.map((item: { time: string; label?: string }) => ({
-          medicineId,
-          time: item.time,
-          label: item.label || null,
-          startDate: now,
-          repeatType: "DAILY",
-          isActive: true,
-        })),
-      });
+        if (i < existingSchedules.length) {
+          // বিদ্যমান শিডিউলটি আপডেট করা
+          const targetSchedule = existingSchedules[i];
+          const timeChanged = targetSchedule.time !== item.time;
 
-      // আজকের জন্য সাথে সাথে নতুন ডোজগুলো তৈরি করে নেওয়া
-      await generateDosesForDate(new Date());
+          await db.schedule.update({
+            where: { id: targetSchedule.id },
+            data: {
+              time: item.time,
+              label: item.label || null,
+              isActive: true,
+            },
+          });
+
+          // যদি সময় পরিবর্তন হয়ে থাকে, তবে আজকের পেন্ডিং ডোজের সময়ও সাথে সাথে আপডেট করা
+          if (timeChanged) {
+            const newScheduledAt = getBangladeshDateTime(new Date(), item.time);
+            await db.dose.updateMany({
+              where: {
+                scheduleId: targetSchedule.id,
+                status: "PENDING",
+                scheduledAt: { gte: startOfDay, lte: endOfDay },
+              },
+              data: {
+                scheduledAt: newScheduledAt,
+                reminderSentAt: null, // নতুন সময়ের জন্য রিমাইন্ডার পাঠানোর সুযোগ দেওয়া
+              },
+            });
+          }
+        } else {
+          // নতুন শিডিউল যোগ করা
+          const newSchedule = await db.schedule.create({
+            data: {
+              medicineId,
+              time: item.time,
+              label: item.label || null,
+              startDate: new Date(),
+              repeatType: "DAILY",
+              isActive: true,
+            },
+          });
+
+          // নতুন শিডিউলের জন্য আজকের পেন্ডিং ডোজ তৈরি
+          const scheduledAt = getBangladeshDateTime(new Date(), item.time);
+          await db.dose.create({
+            data: {
+              scheduleId: newSchedule.id,
+              scheduledAt,
+              status: "PENDING",
+            },
+          });
+        }
+      }
+
+      // যদি আগের চেয়ে কম সংখ্যক শিডিউল থাকে (ইউজার কোনো শিডিউল রিমুভ করেছেন)
+      if (existingSchedules.length > schedules.length) {
+        for (let i = schedules.length; i < existingSchedules.length; i++) {
+          const removedSchedule = existingSchedules[i];
+
+          // আজকের পেন্ডিং ডোজ মুছে ফেলা
+          await db.dose.deleteMany({
+            where: {
+              scheduleId: removedSchedule.id,
+              status: "PENDING",
+              scheduledAt: { gte: startOfDay, lte: endOfDay },
+            },
+          });
+
+          // শিডিউলটি ইনঅ্যাক্টিভ করা যাতে কোনো হিস্ট্রি ক্ষতিগ্রস্ত না হয়
+          await db.schedule.update({
+            where: { id: removedSchedule.id },
+            data: { isActive: false },
+          });
+        }
+      }
     }
 
     return NextResponse.json({
@@ -118,7 +173,10 @@ export async function PUT(
   } catch (error) {
     console.error("PUT /api/medicines/[id] error:", error);
     return NextResponse.json(
-      { error: "ওষুধ আপডেট করতে ব্যর্থ" },
+      {
+        error: "ওষুধ আপডেট করতে ব্যর্থ",
+        details: error instanceof Error ? error.message : "অজানা সমস্যা",
+      },
       { status: 500 }
     );
   }
@@ -168,4 +226,3 @@ export async function DELETE(
     );
   }
 }
-
