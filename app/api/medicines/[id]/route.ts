@@ -102,18 +102,20 @@ export async function PUT(
             },
           });
 
-          // যদি সময় পরিবর্তন হয়ে থাকে, তবে আজকের পেন্ডিং ডোজের সময়ও সাথে সাথে আপডেট করা
+          // যদি সময় পরিবর্তন হয়ে থাকে, তবে আজকের ডোজের সময়ও সাথে সাথে আপডেট করা ও স্ট্যাটাস পেন্ডিং করা
           if (timeChanged) {
             const newScheduledAt = getBangladeshDateTime(new Date(), item.time);
             await db.dose.updateMany({
               where: {
                 scheduleId: targetSchedule.id,
-                status: "PENDING",
                 scheduledAt: { gte: startOfDay, lte: endOfDay },
               },
               data: {
                 scheduledAt: newScheduledAt,
+                status: "PENDING",
                 reminderSentAt: null, // নতুন সময়ের জন্য রিমাইন্ডার পাঠানোর সুযোগ দেওয়া
+                confirmedAt: null,
+                confirmedBy: null,
               },
             });
           }
