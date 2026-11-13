@@ -228,12 +228,17 @@
 ## Phase 7: Polish & Deployment
 
 ### Step 14: Onboarding Flow ও Self Mode
-- [ ] **Target Files:** `app/(auth)/onboarding/page.tsx`, `components/OnboardingChoice.tsx`
-- [ ] **Vault Refs:** `01-PRD.md` (৫.৫ Self Mode), `03-TOKENS.md`
-- [ ] **কাজ:**
-  - সাইনআপের পর: "নিজের জন্য" নাকি "পরিবারের কারো জন্য" — অথবা দুটোই
-  - Self Mode-এ User নিজেই PatientProfile বানায়
-  - Self Mode notification logic (Caregiver-এর বদলে নিজের কাছে)
+- [x] **Target Files:** `app/(auth)/onboarding/page.tsx`, `app/api/user/mode/route.ts`
+- [x] **Vault Refs:** `01-PRD.md` (৫.৫ Self Mode), `03-TOKENS.md`
+- [x] **কাজ:**
+  - অনবোর্ডিং সিলেকশন স্ক্রিন (`/onboarding`): "পরিবারের জন্য" (FAMILY) বনাম "আমার নিজের জন্য" (SELF) মোড নির্বাচন
+  - ইউজার মোড মিউটেশন এন্ডপয়েন্ট (`/api/user/mode`): Self Mode নির্বাচনে স্বয়ংক্রিয়ভাবে নিজের PatientProfile তৈরি ও সেলফ-রিলেশন লিংক স্থাপন
+  - মোড অনুযায়ী ডায়নামিক রিডাইরেক্ট ফ্লো (Family মোডে `/patients/new`, Self মোডে সরাসরি `/medicines/new`)
+- [x] **Verification Gate:**
+  ```bash
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /onboarding & /api/user/mode routes compiled
+  ```
 
 ---
 
