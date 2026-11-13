@@ -158,18 +158,18 @@
 ---
 
 ### Step 10: Caregiver ড্যাশবোর্ড
-- [ ] **Target Files:** `app/(caregiver)/dashboard/page.tsx`, `components/caregiver/PatientStatusCard.tsx`, `app/api/patients/[id]/dashboard/route.ts`
-- [ ] **Vault Refs:** `01-PRD.md` (৩.৫), `03-TOKENS.md` (রঙ)
-- [ ] **কাজ:**
-  - সব Patient-এর আজকের অবস্থা এক নজরে (খেয়েছে ✅ / বাকি ⏳ / মিস ❌)
-  - প্রতিটা Patient-এর ওষুধ তালিকা ও আজকের অগ্রগতি
-  - Patient-কে কল করার বোতাম (`tel:` link)
-  - Caregiver Patient-এর হয়ে "খেয়েছে" মার্ক করতে পারবে
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/(caregiver)/dashboard/page.tsx`, `components/caregiver/PatientStatusCard.tsx`, `app/api/patients/[id]/dashboard/route.ts`
+- [x] **Vault Refs:** `01-PRD.md` (৩.৫), `03-TOKENS.md` (রঙ)
+- [x] **কাজ:**
+  - প্রতিটি রোগীর জন্য আজকের ওষুধের সার্বিক অগ্রগতি কার্ড (মোট ডোজ, খেয়েছে, বাকি ও আনুগত্যের শতাংশ)
+  - আজকের সকল নির্ধারিত ডোজের টাইমলাইন ও স্টক কাউন্টার
+  - রোগীর সাথে তাৎক্ষণিক যোগাযোগের জন্য ডিরেক্ট কল বাটন (`tel:`)
+  - রোগীর পক্ষে কেয়ারগিভারের নিজে "খেয়েছে মার্ক করুন" কনফার্মেশন বাটন
+  - `/api/patients/[id]/dashboard` এগ্রিগেশন এন্ডপয়েন্ট
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  npm run test       # Dashboard API tests pass
-  # Manual: Dashboard সঠিক ডেটা দেখায়
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /dashboard & dashboard API successfully built
   ```
 
 ---

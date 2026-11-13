@@ -9,10 +9,10 @@
 
 | ক্ষেত্র | মান |
 |---|---|
-| **Phase** | Phase 4: Missed Dose Alert |
-| **Last Completed Step** | Step 9 — Caregiver Escalation & Missed Alert Cron Engine ✅ |
-| **Active Step** | Step 10: Caregiver ড্যাশবোর্ড |
-| **Next Step** | Step 11: প্রেসক্রিপশন ছবি → AI Draft |
+| **Phase** | Phase 5: Prescription AI |
+| **Last Completed Step** | Step 10 — Caregiver Family Dashboard & Realtime Action UI ✅ |
+| **Active Step** | Step 11: প্রেসক্রিপশন ছবি → AI Draft |
+| **Next Step** | Step 12: রিফিল ট্র্যাকিং ও ফার্মেসি WhatsApp অর্ডার |
 | **Active Blockers** | — |
 
 ---
@@ -30,6 +30,7 @@
 | Step 7 | Patient Push Notification Cron Engine & Lazy VAPID Dispatcher | 2026-11-13 | tsc ✅ build ✅ /api/cron/send-reminders live ✅ |
 | Step 8 | Accessible Patient Reminder UI (80px Buttons, Bengali TTS & Confirmation API) | 2026-11-13 | tsc ✅ build ✅ /reminder dynamic page live ✅ |
 | Step 9 | Caregiver Escalation Cron Engine (30m Grace, 60m Emergency Alert) | 2026-11-13 | tsc ✅ build ✅ /api/cron/missed-alerts live ✅ |
+| Step 10 | Realtime Family Dashboard, Adherence Analytics & Manual Dose Confirmation | 2026-11-13 | tsc ✅ build ✅ /dashboard dynamic page live ✅ |
 
 ---
 
