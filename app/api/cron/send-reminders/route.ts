@@ -18,7 +18,10 @@ export async function GET() {
     // গত ৩ ঘণ্টার মধ্যে নির্ধারিত কিন্তু এখনও PENDING এমন ডোজ খোঁজা
     const windowStart = new Date(now.getTime() - 3 * 60 * 60 * 1000);
 
-    const pendingDoses = await db.dose.findMany({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const doseModel = (db as any).dose;
+
+    const pendingDoses = await doseModel.findMany({
       where: {
         status: "PENDING",
         reminderSentAt: null,
@@ -42,12 +45,13 @@ export async function GET() {
 
     let sentCount = 0;
 
-    for (const dose of pendingDoses) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    for (const dose of (pendingDoses as any[])) {
       try {
         const medicine = dose.schedule?.medicine;
         if (!medicine || !medicine.patientProfile) {
           // ইনভ্যালিড বা অসম্পূর্ণ ডাটা থাকলে এটি মার্ক করে স্কিপ করা
-          await db.dose.update({
+          await doseModel.update({
             where: { id: dose.id },
             data: { reminderSentAt: new Date() },
           });
@@ -74,7 +78,7 @@ export async function GET() {
         });
 
         if (!patientUser) {
-          await db.dose.update({
+          await doseModel.update({
             where: { id: dose.id },
             data: { reminderSentAt: new Date() },
           });
@@ -157,7 +161,7 @@ export async function GET() {
         }
 
         // একবার পুশ পাঠানো হলে Dose-এ reminderSentAt সেভ করা যাতে প্রতি মিনিটে স্প্যাম নোটিফিকেশন না পাঠায়
-        await db.dose.update({
+        await doseModel.update({
           where: { id: dose.id },
           data: { reminderSentAt: new Date() },
         });
