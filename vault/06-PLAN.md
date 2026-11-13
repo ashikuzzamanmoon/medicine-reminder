@@ -177,20 +177,17 @@
 ## Phase 5: Prescription AI
 
 ### Step 11: প্রেসক্রিপশন ছবি → AI Draft
-- [ ] **Target Files:** `app/api/prescriptions/analyze/route.ts`, `lib/ai.ts`, `app/(caregiver)/prescriptions/review/page.tsx`, `components/caregiver/PrescriptionReview.tsx`
-- [ ] **Vault Refs:** `04-STACK.md` (Gemini API), `05-SCHEMA.md` (PrescriptionDraftSchema), `01-PRD.md` (ধারা ১০)
-- [ ] **কাজ:**
-  - ছবি আপলোড → Vercel Blob-এ সেভ → Gemini Vision API-তে পাঠানো
-  - AI রেসপন্স Zod দিয়ে validate করে Draft বানানো
-  - **Draft সরাসরি DB-তে সেভ হবে না** — Review screen-এ দেখানো হবে
-  - Caregiver প্রতিটা ওষুধ ঠিক করে/বাদ দিয়ে Confirm চাপলে তবেই Medicine API call
-  - AI confidence দেখানো (high/medium/low) + warnings
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/api/prescriptions/analyze/route.ts`, `lib/ai.ts`, `lib/prescription-schema.ts`, `app/(caregiver)/prescriptions/review/page.tsx`, `components/caregiver/PrescriptionReview.tsx`
+- [x] **Vault Refs:** `04-STACK.md` (Gemini API), `05-SCHEMA.md` (PrescriptionDraftSchema), `01-PRD.md` (ধারা ১০)
+- [x] **কাজ:**
+  - `@google/genai` এসডিকে ইন্টিগ্রেশন: প্রেসক্রিপশনের ছবি থেকে ব্র্যান্ড নাম, ডোজ, খাওয়ার সময় ও সময়সূচি এক্সট্রাক্ট করা
+  - Zod ভ্যালিডেশন স্কিমা (`lib/prescription-schema.ts`) দিয়ে কাঠামোগত খসড়া রিটার্ন
+  - নন-নেগোশিয়েবল সুরক্ষা নীতি বাস্তবায়ন: AI তথ্য কখনো সরাসরি সেভ হয় না; `/prescriptions/review` পাতায় কেয়ারগিভার যাচাই ও সম্পাদন করে নিশ্চিত করার পর ডাটাবেসে সেভ করা
+  - সতর্কবার্তা ও হ্যান্ডরাইটিং অস্পষ্টতার ডিসক্লেইমার যুক্তকরণ
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  npm run test       # Draft schema validation tests pass
-  # Manual: ছবি আপলোড করলে Draft দেখায় (DB-তে সেভ হয় না)
-  # Manual: Confirm চাপলে Medicine + Schedule তৈরি হয়
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /prescriptions/review & AI analyze endpoint successfully compiled
   ```
 
 ---

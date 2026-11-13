@@ -9,10 +9,10 @@
 
 | ক্ষেত্র | মান |
 |---|---|
-| **Phase** | Phase 5: Prescription AI |
-| **Last Completed Step** | Step 10 — Caregiver Family Dashboard & Realtime Action UI ✅ |
-| **Active Step** | Step 11: প্রেসক্রিপশন ছবি → AI Draft |
-| **Next Step** | Step 12: রিফিল ট্র্যাকিং ও ফার্মেসি WhatsApp অর্ডার |
+| **Phase** | Phase 6: Refill & History |
+| **Last Completed Step** | Step 11 — প্রেসক্রিপশন ছবি → AI Vision Draft & Review Screen ✅ |
+| **Active Step** | Step 12: রিফিল ট্র্যাকিং ও ফার্মেসি WhatsApp অর্ডার |
+| **Next Step** | Step 13: ইতিহাস ও Adherence রিপোর্ট |
 | **Active Blockers** | — |
 
 ---
@@ -31,6 +31,7 @@
 | Step 8 | Accessible Patient Reminder UI (80px Buttons, Bengali TTS & Confirmation API) | 2026-11-13 | tsc ✅ build ✅ /reminder dynamic page live ✅ |
 | Step 9 | Caregiver Escalation Cron Engine (30m Grace, 60m Emergency Alert) | 2026-11-13 | tsc ✅ build ✅ /api/cron/missed-alerts live ✅ |
 | Step 10 | Realtime Family Dashboard, Adherence Analytics & Manual Dose Confirmation | 2026-11-13 | tsc ✅ build ✅ /dashboard dynamic page live ✅ |
+| Step 11 | Vision AI Prescription OCR, Draft Zod Pipeline & Human Review Screen | 2026-11-13 | tsc ✅ build ✅ /prescriptions/review live ✅ |
 
 ---
 
