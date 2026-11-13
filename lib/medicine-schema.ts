@@ -19,3 +19,4 @@ export const CreateMedicineSchema = z.object({
 });
 
 export type CreateMedicineInput = z.infer<typeof CreateMedicineSchema>;
+

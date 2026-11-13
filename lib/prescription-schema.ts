@@ -17,3 +17,4 @@ export const PrescriptionDraftSchema = z.object({
 
 export type PrescriptionDraft = z.infer<typeof PrescriptionDraftSchema>;
 export type PrescriptionMedicineDraft = z.infer<typeof PrescriptionMedicineDraftSchema>;
+

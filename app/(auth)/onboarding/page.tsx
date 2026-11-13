@@ -51,8 +51,16 @@ export default function OnboardingPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 text-red-700 text-sm font-semibold rounded-2xl">
-            {error}
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 text-sm font-semibold rounded-2xl flex items-center justify-between">
+            <span>{error}</span>
+            {error.includes("লগইন") && (
+              <a
+                href="/login"
+                className="px-3 py-1.5 bg-red-600 text-white rounded-xl text-xs font-bold hover:bg-red-700 transition-colors"
+              >
+                লগইন করুন
+              </a>
+            )}
           </div>
         )}
 
@@ -117,3 +125,4 @@ export default function OnboardingPage() {
     </div>
   );
 }
+

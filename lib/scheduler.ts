@@ -74,3 +74,4 @@ export async function generateDosesForDate(targetDate: Date = new Date()) {
     newDosesCreated: createdDoses.length,
   };
 }
+

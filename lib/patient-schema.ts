@@ -10,3 +10,4 @@ export const CreatePatientProfileSchema = z.object({
 });
 
 export type CreatePatientProfileInput = z.infer<typeof CreatePatientProfileSchema>;
+

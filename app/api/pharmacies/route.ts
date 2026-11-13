@@ -56,3 +56,4 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "ফার্মেসির তালিকা লোড করতে ব্যর্থ" }, { status: 500 });
   }
 }
+

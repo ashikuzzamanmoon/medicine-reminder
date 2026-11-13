@@ -14,3 +14,4 @@ export const VerifyOtpSchema = z.object({
   otp: z.string().length(6, { message: "OTP ৬ সংখ্যার হতে হবে" }),
   name: z.string().min(2, { message: "নাম কমপক্ষে ২ অক্ষরের হতে হবে" }).optional(),
 });
+

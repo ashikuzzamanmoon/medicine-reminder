@@ -198,3 +198,4 @@ export default function PatientStatusCard({ patientId, relation }: { patientId: 
     </div>
   );
 }
+
