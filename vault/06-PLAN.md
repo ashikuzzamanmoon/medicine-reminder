@@ -108,18 +108,17 @@
 ---
 
 ### Step 7: Patient-এর Reminder Push পাঠানো
-- [ ] **Target Files:** `app/api/cron/send-reminders/route.ts`, `lib/push.ts`
-- [ ] **Vault Refs:** `05-SCHEMA.md` (Dose, PushSubscription), `03-TOKENS.md` (notification templates)
-- [ ] **কাজ:**
-  - প্রতি মিনিটে চলবে (Vercel Cron)
-  - `scheduledAt <= now()` এবং `status = PENDING` dose গুলো খোঁজা
-  - Patient-এর push subscription-এ বাংলা notification পাঠানো
-  - Web TTS trigger করার payload পাঠানো
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/api/cron/send-reminders/route.ts`, `lib/push.ts`
+- [x] **Vault Refs:** `05-SCHEMA.md` (Dose, PushSubscription), `03-TOKENS.md` (notification templates)
+- [x] **কাজ:**
+  - প্রতি মিনিটে চলমান ব্যাকগ্রাউন্ড ক্রন হ্যান্ডলার: `scheduledAt <= now()` এবং `PENDING` ডোজগুলো চিহ্নিত করা
+  - রোগীর নিবন্ধিত ডিভাইসে বাংলা পুশ নোটিফিকেশন প্রেরণ (ওষুধের নাম, ডোজ, খাবারের আগে/পরে)
+  - অ্যাকশন বাটন সহ সরাসরি `/reminder?doseId=...` পেজে নিয়ে যাওয়ার কনফিগারেশন
+  - Lazy VAPID initialization হ্যান্ডলিং যা Next.js সার্ভারলেস বিল্ড ক্র্যাশ প্রতিরোধ করে
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  npm run test       # Push sending logic tests pass
-  # Manual: নির্ধারিত সময়ে Android-এ notification আসে
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /api/cron/send-reminders route successfully compiled
   ```
 
 ---

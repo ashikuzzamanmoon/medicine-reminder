@@ -1,14 +1,20 @@
-import webpush from "web-push";
+import * as webpush from "web-push";
 
-const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-const privateKey = process.env.VAPID_PRIVATE_KEY;
+let vapidConfigured = false;
 
-if (publicKey && privateKey) {
-  webpush.setVapidDetails(
-    "mailto:support@medicinereminder.app",
-    publicKey,
-    privateKey
-  );
+function ensureVapidConfig() {
+  if (vapidConfigured) return;
+  const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+  const privateKey = process.env.VAPID_PRIVATE_KEY;
+
+  if (publicKey && privateKey) {
+    webpush.setVapidDetails(
+      "mailto:support@medicinereminder.app",
+      publicKey,
+      privateKey
+    );
+    vapidConfigured = true;
+  }
 }
 
 export interface PushPayload {
@@ -32,6 +38,7 @@ export async function sendPushNotification(
   payload: PushPayload
 ) {
   try {
+    ensureVapidConfig();
     const res = await webpush.sendNotification(
       {
         endpoint: subscription.endpoint,
