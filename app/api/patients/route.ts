@@ -91,33 +91,53 @@ export async function POST(req: Request) {
 
     const { name, age, relation, phone, image } = parsed.data;
 
-    // রোগীর জন্য নতুন User একাউন্ট অথবা প্রোফাইল
-    const patientUser = await db.user.create({
-      data: {
-        name,
-        phone: phone || null,
-        role: "PATIENT",
-        mode: "FAMILY",
-      },
+    // যদি ব্যবহারকারী নিজের প্রোফাইল তৈরি করতে চান অথবা ফোন নম্বর একই হয়
+    let patientUser;
+    if (phone && user.phone && phone === user.phone) {
+      patientUser = user;
+    } else {
+      patientUser = await db.user.create({
+        data: {
+          name,
+          phone: phone || null,
+          role: "PATIENT",
+          mode: "FAMILY",
+        },
+      });
+    }
+
+    // PatientProfile তৈরি বা বের করা
+    let profile = await db.patientProfile.findUnique({
+      where: { userId: patientUser.id },
     });
 
-    // PatientProfile তৈরি
-    const profile = await db.patientProfile.create({
-      data: {
-        userId: patientUser.id,
-        age: age ?? null,
-        image: image || null,
-      },
-    });
+    if (!profile) {
+      profile = await db.patientProfile.create({
+        data: {
+          userId: patientUser.id,
+          age: age ?? null,
+          image: image || null,
+        },
+      });
+    }
 
     // কেয়ারগিভার ও রোগীর মাঝে সম্পর্ক তৈরি (CaregiverPatient)
-    await db.caregiverPatient.create({
-      data: {
+    const existingLink = await db.caregiverPatient.findFirst({
+      where: {
         caregiverId: user.id,
         patientId: patientUser.id,
-        relation,
       },
     });
+
+    if (!existingLink) {
+      await db.caregiverPatient.create({
+        data: {
+          caregiverId: user.id,
+          patientId: patientUser.id,
+          relation,
+        },
+      });
+    }
 
     return NextResponse.json({
       success: true,

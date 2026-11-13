@@ -16,7 +16,7 @@ export default function PatientForm() {
     phone: "",
   });
 
-  const relations = ["বাবা", "মা", "স্বামী", "স্ত্রী", "দাদা", "দাদী", "নানা", "নানী", "অন্যান্য"];
+  const relations = ["আমি নিজে", "বাবা", "মা", "স্বামী", "স্ত্রী", "ছেলে", "মেয়ে", "ভাই", "বোন", "দাদা", "দাদী", "নানা", "নানী", "অন্যান্য"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
