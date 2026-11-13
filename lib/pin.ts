@@ -8,3 +8,4 @@ export function hashPin(pin: string): string {
 export function verifyPin(pin: string, hashedPin: string): boolean {
   return hashPin(pin) === hashedPin;
 }
+

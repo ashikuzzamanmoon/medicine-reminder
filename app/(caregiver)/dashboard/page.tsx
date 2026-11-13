@@ -39,14 +39,14 @@ export default function CaregiverDashboardPage() {
       {/* Top Navbar */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <span className="text-2xl">💊</span>
-            <span className="text-xl font-black text-gray-900 tracking-tight">ওষুধ রিমাইন্ডার</span>
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-2 hover:opacity-80 transition-opacity">
+            <span className="text-xl sm:text-2xl">💊</span>
+            <span className="text-base sm:text-xl font-black text-gray-900 tracking-tight">ওষুধ রিমাইন্ডার</span>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/patients/new"
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded-xl transition-all shadow-sm"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-sm whitespace-nowrap"
             >
               + নতুন রোগী যোগ
             </Link>
@@ -55,10 +55,10 @@ export default function CaregiverDashboardPage() {
       </header>
 
       {/* Main Content Area */}
-      <main className="max-w-5xl mx-auto px-4 pt-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-gray-900">পারিবারিক ড্যাশবোর্ড</h1>
-          <p className="text-sm text-gray-500 mt-1">
+      <main className="max-w-5xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">পারিবারিক ড্যাশবোর্ড</h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">
             পরিবারের সদস্যদের আজকের ওষুধের অবস্থা, অগ্রগতি ও মিসড অ্যালার্ট ট্র্যাকিং
           </p>
         </div>
