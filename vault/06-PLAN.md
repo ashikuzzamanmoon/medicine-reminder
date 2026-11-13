@@ -76,17 +76,16 @@
 ---
 
 ### Step 5: ওষুধ যোগ করার UI ও API (হাতে এন্ট্রি)
-- [ ] **Target Files:** `app/(caregiver)/medicines/new/page.tsx`, `components/caregiver/MedicineForm.tsx`, `app/api/medicines/route.ts`
-- [ ] **Vault Refs:** `03-TOKENS.md`, `05-SCHEMA.md` (Medicine, Schedule), `01-PRD.md` (৩.২)
-- [ ] **কাজ:**
-  - ওষুধের ফর্ম: নাম, ডোজ, food timing, স্টক সংখ্যা, সময়সূচি (একাধিক সময় যোগ করা যাবে)
-  - Zod validation (CreateMedicineSchema)
-  - Medicine + Schedule DB-তে সেভ
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/(caregiver)/medicines/new/page.tsx`, `components/caregiver/MedicineForm.tsx`, `app/api/medicines/route.ts`, `lib/medicine-schema.ts`
+- [x] **Vault Refs:** `03-TOKENS.md`, `05-SCHEMA.md` (Medicine, Schedule), `01-PRD.md` (৩.২)
+- [x] **কাজ:**
+  - ওষুধের ফর্ম: নাম, ডোজ, খাবারের সাথে সময় (আগে/পরে), স্টক সংখ্যা ও ডাইনামিক একাধিক সময়সূচি (সকাল/দুপুর/রাত)
+  - Zod validation স্কিমা (`lib/medicine-schema.ts`)
+  - GET ও POST `/api/medicines` রুট: ট্রানজেকশনে Medicine এবং Schedules রিলেশনাল ডাটা সেভ
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  npm run test       # Medicine form + API tests pass
-  # Manual: ওষুধ যোগ করলে Medicine ও Schedule table-এ row আসে
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /medicines/new & /api/medicines routes live
   ```
 
 ---

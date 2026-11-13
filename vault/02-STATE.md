@@ -9,10 +9,10 @@
 
 | ক্ষেত্র | মান |
 |---|---|
-| **Phase** | Phase 2: Core Data & Auth UI |
-| **Last Completed Step** | Step 4 — Patient প্রোফাইল তৈরির UI ও API ✅ |
-| **Active Step** | Step 5: ওষুধ যোগ করার UI ও API |
-| **Next Step** | Step 6: Dose Generation Cron Job |
+| **Phase** | Phase 3: Reminder Engine |
+| **Last Completed Step** | Step 5 — ওষুধ যোগ করার UI ও API (সফল) ✅ |
+| **Active Step** | Step 6: Dose Generation Cron Job |
+| **Next Step** | Step 7: Patient-এর Reminder Push পাঠানো |
 | **Active Blockers** | — |
 
 ---
@@ -25,6 +25,7 @@
 | Step 2 | NextAuth.js v5 + Google OAuth + Phone OTP Engine | 2026-11-13 | tsc ✅ build ✅ API endpoints generated ✅ |
 | Step 3 | PWA Manifest, Service Worker & Web Push VAPID Integration | 2026-11-13 | tsc ✅ build ✅ sw.js/manifest ✅ |
 | Step 4 | Patient Creation Form, Zod Schema & /api/patients API | 2026-11-13 | tsc ✅ build ✅ /patients/new live ✅ |
+| Step 5 | Medicine Entry Form with Dynamic Multi-schedules & Relational API | 2026-11-13 | tsc ✅ build ✅ /medicines/new live ✅ |
 
 ---
 
