@@ -175,7 +175,15 @@ export default function PatientStatusCard({ patientId, relation }: { patientId: 
                   </p>
                 </div>
 
-                <div>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/reminder?doseId=${dose.id}`}
+                    target="_blank"
+                    className="px-2.5 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg border border-emerald-200 transition-colors"
+                    title="রোগীর জন্য বড় বোতাম ও ভয়েস স্ক্রিন দেখুন"
+                  >
+                    রোগীর স্ক্রিন 📱
+                  </Link>
                   {dose.status === "TAKEN" || dose.status === "LATE" ? (
                     <span className="px-3 py-1.5 bg-green-100 text-green-800 font-bold text-xs rounded-xl flex items-center gap-1">
                       ✅ খাওয়া হয়েছে
