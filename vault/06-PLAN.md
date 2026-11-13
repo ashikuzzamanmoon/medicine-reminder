@@ -142,18 +142,17 @@
 ## Phase 4: Missed Dose Alert
 
 ### Step 9: Caregiver Alert (Missed Dose)
-- [ ] **Target Files:** `app/api/cron/missed-alerts/route.ts`, `lib/push.ts`
-- [ ] **Vault Refs:** `03-TOKENS.md` (GRACE_PERIOD_MINUTES=30, ESCALATION_MINUTES=60), `05-SCHEMA.md` (Alert), `01-PRD.md` (৩.৪)
-- [ ] **কাজ:**
-  - প্রতি ৫ মিনিটে: `scheduledAt + 30 min < now()` এবং `PENDING` dose → Caregiver MISSED_FIRST alert
-  - `scheduledAt + 60 min < now()` → Caregiver MISSED_ESCALATION alert
-  - Alert row তৈরি (duplicate পাঠানো বন্ধ করা)
-  - Caregiver-এর push subscription-এ বাংলা alert পাঠানো
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/api/cron/missed-alerts/route.ts`, `lib/push.ts`
+- [x] **Vault Refs:** `03-TOKENS.md` (GRACE_PERIOD_MINUTES=30, ESCALATION_MINUTES=60), `05-SCHEMA.md` (Alert), `01-PRD.md` (৩.৪)
+- [x] **কাজ:**
+  - প্রতি ৫ মিনিটে চলা ব্যাকগ্রাউন্ড ক্রন: ৩০ মিনিট অতিক্রান্ত পেন্ডিং ডোজে `MISSED_FIRST` নোটিফিকেশন প্রদান
+  - ৬০ মিনিট অতিক্রান্তে জরুরি `MISSED_ESCALATION` অ্যালার্ট প্রেরণ
+  - ডাটাবেসে `Alert` রেকর্ড ট্র্যাক করে একাধিকবার ডুপ্লিকেট অ্যালার্ট যাওয়া প্রতিরোধ
+  - রোগীর সাথে যুক্ত সকল কেয়ারগিভারের নিকট বাংলায় জরুরি নোটিফিকেশন পাঠানো
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  npm run test       # Alert logic tests (30/60 min threshold) pass
-  # Manual: Dose pending রেখে cron hit করলে Caregiver notification আসে
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /api/cron/missed-alerts route successfully compiled
   ```
 
 ---

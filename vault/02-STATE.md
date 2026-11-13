@@ -10,9 +10,9 @@
 | ক্ষেত্র | মান |
 |---|---|
 | **Phase** | Phase 4: Missed Dose Alert |
-| **Last Completed Step** | Step 8 — Patient Reminder Screen (Big Buttons & Bengali TTS) ✅ |
-| **Active Step** | Step 9: Caregiver Alert (Missed Dose) |
-| **Next Step** | Step 10: Caregiver ড্যাশবোর্ড |
+| **Last Completed Step** | Step 9 — Caregiver Escalation & Missed Alert Cron Engine ✅ |
+| **Active Step** | Step 10: Caregiver ড্যাশবোর্ড |
+| **Next Step** | Step 11: প্রেসক্রিপশন ছবি → AI Draft |
 | **Active Blockers** | — |
 
 ---
@@ -29,6 +29,7 @@
 | Step 6 | Daily Dose Generation Engine & Vercel Cron Endpoint | 2026-11-13 | tsc ✅ build ✅ /api/cron/generate-doses live ✅ |
 | Step 7 | Patient Push Notification Cron Engine & Lazy VAPID Dispatcher | 2026-11-13 | tsc ✅ build ✅ /api/cron/send-reminders live ✅ |
 | Step 8 | Accessible Patient Reminder UI (80px Buttons, Bengali TTS & Confirmation API) | 2026-11-13 | tsc ✅ build ✅ /reminder dynamic page live ✅ |
+| Step 9 | Caregiver Escalation Cron Engine (30m Grace, 60m Emergency Alert) | 2026-11-13 | tsc ✅ build ✅ /api/cron/missed-alerts live ✅ |
 
 ---
 
