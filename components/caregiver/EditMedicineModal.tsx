@@ -90,6 +90,15 @@ export default function EditMedicineModal({
     setError(null);
 
     try {
+      // স্বয়ংক্রিয়ভাবে সময়ের ওপর ভিত্তি করে লেবেল সেট করা (যেমন: সকাল, রাত)
+      const schedulesWithAutoLabels = schedules.map((item) => {
+        const period = formatBanglaTime(item.time).split(" ")[0] || "";
+        return {
+          time: item.time,
+          label: period,
+        };
+      });
+
       const res = await fetch(`/api/medicines/${medicineId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -99,7 +108,7 @@ export default function EditMedicineModal({
           foodTiming,
           stockCount: stockCount ? parseInt(stockCount, 10) : null,
           notes,
-          schedules,
+          schedules: schedulesWithAutoLabels,
         }),
       });
 
@@ -242,39 +251,32 @@ export default function EditMedicineModal({
                   {schedules.map((item, idx) => (
                     <div
                       key={idx}
-                      className="p-3 bg-gray-50 rounded-2xl border border-gray-200 flex flex-col gap-2"
+                      className="p-3 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-between gap-3"
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2.5 flex-1 min-w-0 flex-wrap">
                         <input
                           type="time"
                           required
                           value={item.time}
                           onChange={(e) => updateSchedule(idx, "time", e.target.value)}
-                          className="w-32 sm:w-36 px-2.5 py-1.5 bg-white rounded-xl border border-gray-300 text-xs sm:text-sm font-bold text-gray-800 outline-none shrink-0"
+                          className="px-3 py-2 bg-white rounded-xl border border-gray-300 text-sm font-bold text-gray-900 outline-none shadow-xs"
                         />
-                        <input
-                          type="text"
-                          placeholder="লেবেল (যেমন: সকাল)"
-                          value={item.label}
-                          onChange={(e) => updateSchedule(idx, "label", e.target.value)}
-                          className="flex-1 min-w-0 px-2.5 py-1.5 bg-white rounded-xl border border-gray-300 text-xs outline-none"
-                        />
-                        {schedules.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeScheduleTime(idx)}
-                            className="w-7 h-7 flex items-center justify-center text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg text-xs font-bold shrink-0 transition-colors"
-                            title="মুছে ফেলুন"
-                          >
-                            ✕
-                          </button>
-                        )}
+                        <span className="text-xs sm:text-sm text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1 whitespace-nowrap">
+                          <span>🕒 সময়:</span>
+                          <span>{formatBanglaTime(item.time)}</span>
+                        </span>
                       </div>
-                      {/* Live 12-hour Bangla Preview */}
-                      <div className="text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 w-fit">
-                        <span>🕒 বাংলা সময়:</span>
-                        <span className="font-bold">{formatBanglaTime(item.time)}</span>
-                      </div>
+
+                      {schedules.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeScheduleTime(idx)}
+                          className="w-8 h-8 flex items-center justify-center text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl text-base font-bold shrink-0 transition-colors"
+                          title="এই সময় মুছে ফেলুন"
+                        >
+                          ✕
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>
