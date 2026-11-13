@@ -41,6 +41,18 @@ interface PatientDashboardData {
   }[];
 }
 
+// রোগীর দৃষ্টিকোণ থেকে কেয়ারগিভারের বিপরীত সম্পর্ক নির্ধারণ
+function getCaregiverInverseRelation(relation: string): string {
+  const r = (relation || "").trim();
+  if (r === "বাবা" || r === "মা") return "ছেলে";
+  if (r === "দাদা" || r === "দাদী" || r === "নানা" || r === "নানী") return "নাতি";
+  if (r === "স্বামী") return "স্ত্রী";
+  if (r === "স্ত্রী") return "স্বামী";
+  if (r === "ভাই" || r === "বোন") return "ভাই / বোন";
+  if (r === "ছেলে" || r === "মেয়ে") return "বাবা / মা";
+  return "স্বজন";
+}
+
 export default function PatientDashboardView({
   patientId,
   userName,
@@ -151,7 +163,7 @@ export default function PatientDashboardView({
               <div className="text-xs sm:text-sm text-gray-600">
                 <span>তত্ত্বাবধান করছেন: </span>
                 <span className="font-bold text-gray-900">
-                  {data.caregiver.name} ({data.caregiver.relation})
+                  {data.caregiver.name} ({getCaregiverInverseRelation(data.caregiver.relation)})
                 </span>
               </div>
               {data.caregiver.phone && (
