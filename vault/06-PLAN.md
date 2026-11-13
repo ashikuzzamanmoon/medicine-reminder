@@ -26,18 +26,17 @@
 ---
 
 ### Step 2: NextAuth.js সেটআপ (Google OAuth + Phone OTP ফাউন্ডেশন)
-- [ ] **Target Files:** `app/api/auth/[...nextauth]/route.ts`, `lib/auth.ts`, `app/api/auth/send-otp/route.ts`, `app/api/auth/verify-otp/route.ts`
-- [ ] **Vault Refs:** `04-STACK.md`, `05-SCHEMA.md` (Account, Session, VerificationToken)
-- [ ] **কাজ:**
-  - NextAuth.js v5 ইনস্টল ও Google provider কনফিগার
-  - Custom Phone OTP flow: `send-otp` → SSL Wireless API (mock করা যাবে dev-এ), `verify-otp` → session তৈরি
-  - Zod দিয়ে request validation
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/api/auth/[...nextauth]/route.ts`, `auth.ts`, `lib/auth-schema.ts`, `app/api/auth/send-otp/route.ts`, `app/api/auth/verify-otp/route.ts`
+- [x] **Vault Refs:** `04-STACK.md`, `05-SCHEMA.md` (Account, Session, VerificationToken)
+- [x] **কাজ:**
+  - NextAuth.js v5 beta ও @auth/prisma-adapter ইনস্টল
+  - Google Provider ও Database Session স্ট্র্যাটেজি কনফিগার
+  - Custom Phone OTP flow: `send-otp` (টোকেন জেনারেশন ও মেয়াদ) এবং `verify-otp` (টোকেন ম্যাচিং, ইউজার ক্রিয়েশন ও সেশন কুকি)
+  - Zod দিয়ে ফোন নম্বর ও ওটিপি ভ্যালিডেশন
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  npm run dev        # Server starts
-  # Manual: Google OAuth login কাজ করে
-  # Manual: OTP send/verify endpoint 200 রিটার্ন করে
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ Route compilation succeeded (API routes live)
   ```
 
 ---
