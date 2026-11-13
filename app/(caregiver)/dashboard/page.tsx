@@ -39,10 +39,10 @@ export default function CaregiverDashboardPage() {
       {/* Top Navbar */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <span className="text-2xl">💊</span>
             <span className="text-xl font-black text-gray-900 tracking-tight">ওষুধ রিমাইন্ডার</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-3">
             <Link
               href="/patients/new"

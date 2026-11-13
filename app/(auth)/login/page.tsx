@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -74,7 +75,9 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100">
         <div className="text-center mb-8">
-          <span className="text-4xl mb-2 block">💊</span>
+          <Link href="/" className="inline-block group mb-2" title="হোম পেজে যান">
+            <span className="text-4xl group-hover:scale-110 transition-transform inline-block">💊</span>
+          </Link>
           <h1 className="text-3xl font-extrabold text-gray-900">লগইন করুন</h1>
           <p className="text-sm text-gray-500 mt-2">
             আপনার ফোন নম্বর দিয়ে এক ক্লিকে ওটিপি (OTP) কোড পান

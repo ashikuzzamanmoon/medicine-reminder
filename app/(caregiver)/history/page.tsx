@@ -70,10 +70,13 @@ export default function HistoryPage() {
     <div className="min-h-screen bg-gray-50/70 pb-16">
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <span className="text-2xl">💊</span>
+            <span className="text-lg font-black text-gray-900 tracking-tight">ওষুধ রিমাইন্ডার</span>
+          </Link>
           <Link href="/dashboard" className="text-sm font-semibold text-green-700 hover:underline">
             ← ড্যাশবোর্ডে ফিরে যান
           </Link>
-          <span className="text-lg font-bold text-gray-900">ওষুধের ইতিহাস ও রিপোর্ট</span>
         </div>
       </header>
 

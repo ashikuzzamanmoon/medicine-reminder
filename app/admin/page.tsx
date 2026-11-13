@@ -58,7 +58,7 @@ export default function AdminDashboardPage() {
       {/* Admin Header */}
       <header className="bg-slate-800/80 backdrop-blur border-b border-slate-700 sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
             <span className="p-2 bg-emerald-500/10 text-emerald-400 rounded-xl text-xl font-black">
               🛡️
             </span>
@@ -66,7 +66,7 @@ export default function AdminDashboardPage() {
               <h1 className="text-lg font-bold text-white leading-tight">সুপার অ্যাডমিন ড্যাশবোর্ড</h1>
               <p className="text-xs text-slate-400">মেডিসিন রিমাইন্ডার সিস্টেম মেট্রিক্স ও ইউজার ট্র্যাকিং</p>
             </div>
-          </div>
+          </Link>
           <Link
             href="/dashboard"
             className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-xs font-semibold transition-colors"
