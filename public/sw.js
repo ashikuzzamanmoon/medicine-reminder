@@ -14,6 +14,14 @@ self.addEventListener("push", (event) => {
   try {
     const data = event.data.json();
     const title = data.title || "ওষুধের রিমাইন্ডার";
+    const showReminderActions = data.showActions === true || (data.type === "REMINDER" && data.showActions !== false);
+    const actions = showReminderActions
+      ? [
+          { action: "taken", title: "খেয়েছি ✅" },
+          { action: "snooze", title: "পরে খাবো ⏰" },
+        ]
+      : [];
+
     const options = {
       body: data.body || "আপনার নির্ধারিত ওষুধ খাওয়ার সময় হয়েছে।",
       icon: "/icon-192.png",
@@ -24,11 +32,9 @@ self.addEventListener("push", (event) => {
       data: {
         url: data.url || "/reminder",
         speakText: data.speakText || null,
+        doseId: data.doseId || null,
       },
-      actions: [
-        { action: "taken", title: "খেয়েছি ✅" },
-        { action: "snooze", title: "পরে খাবো ⏰" },
-      ],
+      actions,
     };
 
     event.waitUntil(self.registration.showNotification(title, options));

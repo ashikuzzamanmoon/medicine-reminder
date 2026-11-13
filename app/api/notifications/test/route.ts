@@ -53,6 +53,8 @@ export async function POST() {
           title: "🔔 টেস্ট নোটিফিকেশন সফল!",
           body: "আপনার ফোনে ওষুধ রিমাইন্ডারের নোটিফিকেশন সক্রিয় হয়েছে। সময়মতো অ্যালার্ট পাবেন।",
           url: "/dashboard",
+          type: "INFO",
+          showActions: false,
         }
       );
       if (res.success) {

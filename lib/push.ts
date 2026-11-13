@@ -36,6 +36,9 @@ export interface PushPayload {
   url?: string;
   tag?: string;
   speakText?: string;
+  type?: "REMINDER" | "CONFIRMATION" | "MISSED_ALERT" | "INFO";
+  showActions?: boolean;
+  doseId?: string;
 }
 
 export interface PushSubscriptionKeys {

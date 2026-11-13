@@ -79,6 +79,9 @@ export async function GET() {
             url: `/reminder?doseId=${dose.id}`,
             speakText,
             tag: `dose-${dose.id}`,
+            type: "REMINDER",
+            showActions: true,
+            doseId: dose.id,
           }
         );
         sentCount++;

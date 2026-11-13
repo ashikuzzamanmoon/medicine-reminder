@@ -138,6 +138,8 @@ export async function POST(
               title: "✅ ওষুধ খাওয়া সম্পন্ন হয়েছে",
               body: `${patientName} ${medicineName} (${dosage}) খেয়েছেন।`,
               url: "/dashboard",
+              type: "CONFIRMATION",
+              showActions: false,
             }
           );
         }
