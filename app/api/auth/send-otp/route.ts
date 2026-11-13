@@ -16,9 +16,9 @@ export async function POST(req: Request) {
 
     const { phone } = parsed.data;
 
-    // 6-digit OTP জেনারেট (Dev মোডে ফিক্সড অথবা র্যান্ডম)
-    const otp = process.env.NODE_ENV === "development" ? "123456" : Math.floor(100000 + Math.random() * 900000).toString();
-    const expires = new Date(Date.now() + 5 * 60 * 1000); // ৫ মিনিট মেয়াদ
+    // 6-digit OTP জেনারেট (পেইড SMS API ছাড়া যেন যে কেউ বা পাইলট টেস্টার টেস্ট করতে পারে)
+    const otp = "123456";
+    const expires = new Date(Date.now() + 10 * 60 * 1000); // ১০ মিনিট মেয়াদ
 
     // আগের কোনো OTP থাকলে ডিলিট করে নতুনটা সেভ করি
     await db.verificationToken.deleteMany({
@@ -33,14 +33,12 @@ export async function POST(req: Request) {
       },
     });
 
-    // প্রোডাকশনে SSL Wireless API কল হবে, বর্তমানে Dev লগ
     console.log(`[OTP Engine] Generated OTP for ${phone}: ${otp}`);
 
     return NextResponse.json({
       success: true,
       message: "OTP পাঠানো হয়েছে",
-      // Dev মোডে টেস্টিং সুবিধার জন্য ওটিপি ফিরিয়ে দেওয়া হচ্ছে
-      ...(process.env.NODE_ENV === "development" ? { devOtp: otp } : {}),
+      devOtp: otp, // স্ক্রিনে স্পষ্ট দেখানোর জন্য
     });
   } catch (error) {
     console.error("send-otp error:", error);
