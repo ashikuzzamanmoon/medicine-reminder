@@ -33,14 +33,40 @@ export async function GET() {
     const links = await db.caregiverPatient.findMany({
       where: { caregiverId: user.id },
       include: {
-        patient: {
-          include: {
-            // PatientProfile বের করা
-          },
-        },
+        patient: true,
       },
       orderBy: { createdAt: "desc" },
     });
+
+    // যদি কেয়ারগিভার হিসেবে কোনো লিংক না থাকে, কিন্তু ইউজার নিজেই একজন রোগী হন
+    if (links.length === 0) {
+      const myProfile = await db.patientProfile.findUnique({
+        where: { userId: user.id },
+        include: {
+          medicines: {
+            where: { isActive: true },
+          },
+        },
+      });
+
+      if (myProfile) {
+        return NextResponse.json({
+          success: true,
+          patients: [
+            {
+              id: user.id,
+              profileId: myProfile.id,
+              name: user.name,
+              phone: user.phone,
+              relation: "আমি নিজে",
+              age: myProfile.age ?? null,
+              image: myProfile.image ?? null,
+              medicinesCount: myProfile.medicines.length,
+            },
+          ],
+        });
+      }
+    }
 
     const patients = await Promise.all(
       links.map(async (link) => {
