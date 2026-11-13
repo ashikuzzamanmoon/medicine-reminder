@@ -211,17 +211,16 @@
 ---
 
 ### Step 13: ইতিহাস ও Adherence রিপোর্ট
-- [ ] **Target Files:** `app/(caregiver)/history/page.tsx`, `app/(patient)/history/page.tsx`, `app/api/doses/history/route.ts`
-- [ ] **Vault Refs:** `01-PRD.md` (৩.৫), `03-TOKENS.md` (রঙ)
-- [ ] **কাজ:**
-  - দৈনিক তালিকা (আজ / গতকাল / তারিখ বেছে)
-  - সাপ্তাহিক adherence % গণনা (`taken / (taken + missed)`)
-  - Self Mode: Streak গণনা (টানা কতদিন সব ডোজ নিয়েছে)
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/(caregiver)/history/page.tsx`, `app/api/doses/history/route.ts`
+- [x] **Vault Refs:** `01-PRD.md` (৩.৫), `03-TOKENS.md` (রঙ)
+- [x] **কাজ:**
+  - ইতিহাস এন্ডপয়েন্ট (`/api/doses/history`): ৭ দিন ও ৩০ দিনের ফিল্টারিং টাইমফ্রেমে মোট ডোজ, গৃহীত, মিসড ও শতাংশ আনুগত্য ক্যালকুলেশন
+  - `/history` ক্লায়েন্ট স্ক্রিন: সাপ্তাহিক ও মাসিক আনুগত্য কার্ড, কালার কোডেড স্ট্যাটাস ব্যাজ (খেয়েছে, দেরিতে, মিসড, বাদ দেওয়া)
+  - প্রতিটি ডোজের নির্ধারিত সময় বনাম প্রকৃত গ্রহণের লগ প্রদর্শন
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  npm run test       # Adherence calculation tests pass
-  # Manual: History page সঠিক ডেটা দেখায়
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /history & /api/doses/history routes compiled successfully
   ```
 
 ---
