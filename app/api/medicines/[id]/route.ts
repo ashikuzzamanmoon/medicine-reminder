@@ -105,7 +105,8 @@ export async function PUT(
           // যদি সময় পরিবর্তন হয়ে থাকে, তবে আজকের ডোজের সময়ও সাথে সাথে আপডেট করা ও স্ট্যাটাস পেন্ডিং করা
           if (timeChanged) {
             const newScheduledAt = getBangladeshDateTime(new Date(), item.time);
-            await db.dose.updateMany({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await (db as any).dose.updateMany({
               where: {
                 scheduleId: targetSchedule.id,
                 scheduledAt: { gte: startOfDay, lte: endOfDay },
