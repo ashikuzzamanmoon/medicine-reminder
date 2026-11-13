@@ -1,18 +1,13 @@
 import * as webpush from "web-push";
 
-const DEFAULT_VAPID_PUBLIC_KEY =
-  "BO5uTOkkY95nfsQHI6rcsQTy9FNT-MAtDasOjG16FendkU6SgcX80NvYvQYH9laeCRf4e7x2j1aAUowpkOaRqiU";
-const DEFAULT_VAPID_PRIVATE_KEY =
-  "u9lczpTUyaszBgZ1NZXpBUQKHEU4003bgxYBEGDGjNk";
-
 let vapidConfigured = false;
 
 export function getVapidPublicKey(): string {
-  return process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || DEFAULT_VAPID_PUBLIC_KEY;
+  return process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
 }
 
 export function getVapidPrivateKey(): string {
-  return process.env.VAPID_PRIVATE_KEY || DEFAULT_VAPID_PRIVATE_KEY;
+  return process.env.VAPID_PRIVATE_KEY || "";
 }
 
 function ensureVapidConfig() {
