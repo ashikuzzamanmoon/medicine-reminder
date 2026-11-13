@@ -60,8 +60,8 @@ export default function LoginPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      // সফল হলে অনবোর্ডিং বা ড্যাশবোর্ডে রিডাইরেক্ট
-      router.push("/onboarding");
+      // সফল হলে ড্যাশবোর্ডে রিডাইরেক্ট
+      router.push("/dashboard");
       router.refresh();
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);

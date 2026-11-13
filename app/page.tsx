@@ -10,12 +10,20 @@ export default function HomePage() {
             <span className="text-2xl">💊</span>
             <span className="text-xl font-black text-gray-900 tracking-tight">ওষুধ রিমাইন্ডার</span>
           </div>
-          <Link
-            href="/dashboard"
-            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded-xl transition-all shadow-sm"
-          >
-            ড্যাশবোর্ড
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="px-4 py-2 text-gray-700 hover:text-green-700 font-bold text-sm rounded-xl transition-all"
+            >
+              লগইন
+            </Link>
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded-xl transition-all shadow-sm"
+            >
+              ড্যাশবোর্ড
+            </Link>
+          </div>
         </div>
       </header>
 
