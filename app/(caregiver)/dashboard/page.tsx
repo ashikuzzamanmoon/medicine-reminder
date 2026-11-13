@@ -64,13 +64,6 @@ export default function CaregiverDashboardPage() {
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
-              href="/onboarding"
-              className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs sm:text-sm rounded-xl transition-all border border-emerald-200 whitespace-nowrap"
-              title="Self Mode বা Family Mode পরিবর্তন করুন"
-            >
-              🔄 মোড পরিবর্তন
-            </Link>
-            <Link
               href="/patients/new"
               className="px-3 py-1.5 sm:px-4 sm:py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-sm whitespace-nowrap"
             >
