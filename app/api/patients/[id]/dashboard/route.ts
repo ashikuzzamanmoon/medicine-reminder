@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { generateDosesForDate } from "@/lib/scheduler";
+import { getBangladeshDayBounds } from "@/lib/timezone";
 
 export async function GET(
   req: Request,
@@ -38,12 +39,8 @@ export async function GET(
     const patientName = patient?.name || "রোগী";
     const patientPhone = patient?.phone || null;
 
-    // আজকের দিনের শুরু ও শেষ
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    // আজকের দিনের শুরু ও শেষ (বাংলাদেশ টাইমজোন অনুযায়ী)
+    const { startOfDay, endOfDay } = getBangladeshDayBounds();
 
     // আজকের ডোজ বের করা
     let todayDoses = profile?.id

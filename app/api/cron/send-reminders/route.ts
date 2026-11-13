@@ -44,11 +44,20 @@ export async function GET() {
       const medicine = dose.schedule.medicine;
       const patientUserId = medicine.patientProfile.userId;
 
-      // রোগীর ব্যবহারকারী তথ্য
+      // রোগীর তথ্য এবং সংশ্লিষ্ট কেয়ারগিভারদের বের করা
       const patientUser = await db.user.findUnique({
         where: { id: patientUserId },
         include: {
           pushSubscriptions: true,
+          patientLinks: {
+            include: {
+              caregiver: {
+                include: {
+                  pushSubscriptions: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -59,11 +68,7 @@ export async function GET() {
       const doseAmount = medicine.dose;
       const timingText = medicine.foodTiming === "BEFORE" ? "খাবারের আগে" : medicine.foodTiming === "AFTER" ? "খাবারের পরে" : "";
 
-      const title = `💊 ওষুধ খাওয়ার সময় হয়েছে`;
-      const body = `${patientName}, এখন আপনার ${medicineName} (${doseAmount}) নেওয়ার সময়। ${timingText}`;
-      const speakText = `${patientName}, এখন আপনার ${medicineName} ওষুধের সময়। ডোজ ${doseAmount}।`;
-
-      // রোগীর নিবন্ধিত ডিভাইসে পুশ পাঠানো
+      // ১. রোগীর নিবন্ধিত ডিভাইসে পুশ পাঠানো
       for (const sub of patientUser.pushSubscriptions) {
         await sendPushNotification(
           {
@@ -74,10 +79,10 @@ export async function GET() {
             },
           },
           {
-            title,
-            body,
+            title: `💊 ওষুধ খাওয়ার সময় হয়েছে`,
+            body: `${patientName}, এখন আপনার ${medicineName} (${doseAmount}) নেওয়ার সময়। ${timingText}`,
             url: `/reminder?doseId=${dose.id}`,
-            speakText,
+            speakText: `${patientName}, এখন আপনার ${medicineName} ওষুধের সময়। ডোজ ${doseAmount}।`,
             tag: `dose-${dose.id}`,
             type: "REMINDER",
             showActions: true,
@@ -85,6 +90,35 @@ export async function GET() {
           }
         );
         sentCount++;
+      }
+
+      // ২. সংশ্লিষ্ট কেয়ারগিভারদের ডিভাইসে পুশ পাঠানো (পারিবারিক তত্ত্বাবধান নিশ্চিত করতে)
+      for (const link of patientUser.patientLinks) {
+        const caregiver = link.caregiver;
+        if (!caregiver || !caregiver.pushSubscriptions) continue;
+
+        for (const sub of caregiver.pushSubscriptions) {
+          await sendPushNotification(
+            {
+              endpoint: sub.endpoint,
+              keys: {
+                p256dh: sub.p256dh,
+                auth: sub.auth,
+              },
+            },
+            {
+              title: `💊 ${patientName}-এর ওষুধ খাওয়ার সময়`,
+              body: `${patientName}-এর এখন ${medicineName} (${doseAmount}) নেওয়ার সময়। ${timingText}`,
+              url: `/reminder?doseId=${dose.id}`,
+              speakText: `${patientName}-এর ${medicineName} ওষুধ খাওয়ার সময় হয়েছে।`,
+              tag: `dose-${dose.id}-cg`,
+              type: "REMINDER",
+              showActions: true,
+              doseId: dose.id,
+            }
+          );
+          sentCount++;
+        }
       }
     }
 
