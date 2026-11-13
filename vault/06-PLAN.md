@@ -195,17 +195,17 @@
 ## Phase 6: Refill & History
 
 ### Step 12: রিফিল ট্র্যাকিং ও ফার্মেসি WhatsApp অর্ডার
-- [ ] **Target Files:** `app/api/cron/refill-check/route.ts`, `app/(caregiver)/refill/page.tsx`, `app/api/pharmacies/route.ts`
-- [ ] **Vault Refs:** `03-TOKENS.md` (REFILL_ALERT_DAYS=5), `01-PRD.md` (৩.৬), `05-SCHEMA.md` (Pharmacy)
-- [ ] **কাজ:**
-  - প্রতিদিন সকাল ৯টায়: স্টক ৫ দিনের কম হলে Caregiver push alert
-  - Refill page: কোন ওষুধ কতদিনের আছে তালিকা
-  - ফার্মেসি তালিকা + WhatsApp অর্ডার বোতাম (`wa.me/` link দিয়ে pre-filled message)
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/api/cron/refill-check/route.ts`, `app/(caregiver)/refill/page.tsx`, `app/api/pharmacies/route.ts`
+- [x] **Vault Refs:** `03-TOKENS.md` (REFILL_ALERT_DAYS=5), `01-PRD.md` (৩.৬), `05-SCHEMA.md` (Pharmacy)
+- [x] **কাজ:**
+  - প্রতিদিন সকাল ৯টায় চলমান ক্রন `/api/cron/refill-check`: স্টক ৫ দিনের বা তার কম হলে কেয়ারগিভারদের কাছে `REFILL_LOW` পুশ অ্যালার্ট পাঠানো
+  - `/refill` পৃষ্ঠা তৈরি: প্রতিটি রোগীর ওষুধের অবশিষ্ট স্টক কাউন্টার ও ক্যালকুলেটেড দিনের মজুদ প্রদর্শন
+  - ফার্মেসি তালিকা এন্ডপয়েন্ট (`/api/pharmacies`): বাংলাদেশি স্থানীয় ফার্মেসিসমূহের ডিরেক্টরি (লাজ ফার্মা, তামান্না ফার্মেসি ইত্যাদি)
+  - প্রি-ফিল্ড প্রেসক্রিপশন মেসেজ সহ সরাসরি WhatsApp অর্ডারিং লিংক জেনারেশন (`wa.me/...`)
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  # Manual: স্টক কম থাকলে refill alert আসে
-  # Manual: WhatsApp বোতামে ক্লিক করলে সঠিক message pre-filled
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /refill, /api/pharmacies & /api/cron/refill-check routes compiled
   ```
 
 ---

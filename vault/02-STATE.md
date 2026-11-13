@@ -10,9 +10,9 @@
 | ক্ষেত্র | মান |
 |---|---|
 | **Phase** | Phase 6: Refill & History |
-| **Last Completed Step** | Step 11 — প্রেসক্রিপশন ছবি → AI Vision Draft & Review Screen ✅ |
-| **Active Step** | Step 12: রিফিল ট্র্যাকিং ও ফার্মেসি WhatsApp অর্ডার |
-| **Next Step** | Step 13: ইতিহাস ও Adherence রিপোর্ট |
+| **Last Completed Step** | Step 12 — রিফিল ট্র্যাকিং ও ফার্মেসি WhatsApp অর্ডার ✅ |
+| **Active Step** | Step 13: ইতিহাস ও Adherence রিপোর্ট |
+| **Next Step** | Step 14: Onboarding Flow ও Self Mode |
 | **Active Blockers** | — |
 
 ---
@@ -32,6 +32,7 @@
 | Step 9 | Caregiver Escalation Cron Engine (30m Grace, 60m Emergency Alert) | 2026-11-13 | tsc ✅ build ✅ /api/cron/missed-alerts live ✅ |
 | Step 10 | Realtime Family Dashboard, Adherence Analytics & Manual Dose Confirmation | 2026-11-13 | tsc ✅ build ✅ /dashboard dynamic page live ✅ |
 | Step 11 | Vision AI Prescription OCR, Draft Zod Pipeline & Human Review Screen | 2026-11-13 | tsc ✅ build ✅ /prescriptions/review live ✅ |
+| Step 12 | Low-stock Alert Engine, Refill Overview & WhatsApp Pharmacy Order Links | 2026-11-13 | tsc ✅ build ✅ /refill & /api/pharmacies live ✅ |
 
 ---
 
