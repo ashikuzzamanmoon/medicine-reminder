@@ -15,13 +15,17 @@ self.addEventListener("push", (event) => {
   try {
     const data = event.data.json();
     const title = data.title || "ওষুধের রিমাইন্ডার";
-    const showReminderActions = data.showActions === true || (data.type === "REMINDER" && data.showActions !== false);
-    const actions = showReminderActions
-      ? [
-          { action: "taken", title: "খেয়েছি ✅" },
-          { action: "snooze", title: "পরে খাবো ⏰" },
-        ]
-      : [];
+    let actions = [];
+    if (data.showActions === false) {
+      actions = [];
+    } else if (Array.isArray(data.actions)) {
+      actions = data.actions;
+    } else if (data.type === "REMINDER") {
+      actions = [
+        { action: "taken", title: "খেয়েছি ✅" },
+        { action: "snooze", title: "পরে খাবো ⏰" },
+      ];
+    }
 
     const options = {
       body: data.body || "আপনার নির্ধারিত ওষুধ খাওয়ার সময় হয়েছে।",

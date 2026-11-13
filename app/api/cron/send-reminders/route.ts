@@ -141,13 +141,12 @@ export async function GET() {
                   },
                 },
                 {
-                  title: `💊 ${patientName}-এর ওষুধ খাওয়ার সময়`,
-                  body: `${patientName}-এর এখন ${medicineName} (${doseAmount}) নেওয়ার সময়। ${timingText}`,
-                  url: `/reminder?doseId=${dose.id}`,
-                  speakText: `${patientName}-এর ${medicineName} ওষুধ খাওয়ার সময় হয়েছে।`,
+                  title: `💊 ${patientName}-এর ওষুধ দেওয়ার সময় হয়েছে`,
+                  body: `${patientName}-কে এখন ${medicineName} (${doseAmount}) সেবন করান। ${timingText}`,
+                  url: `/dashboard`,
                   tag: `dose-${dose.id}-cg`,
-                  type: "REMINDER",
-                  showActions: true,
+                  type: "INFO",
+                  showActions: false,
                   doseId: dose.id,
                 }
               );
