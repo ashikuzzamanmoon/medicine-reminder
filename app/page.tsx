@@ -1,6 +1,26 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { db } from "@/lib/db";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cookieStore = cookies();
+  const sessionToken = cookieStore.get("authjs.session-token")?.value;
+  let isLoggedIn = false;
+
+  if (sessionToken) {
+    try {
+      const session = await db.session.findUnique({
+        where: { sessionToken },
+        include: { user: true },
+      });
+      if (session && session.expires > new Date()) {
+        isLoggedIn = true;
+      }
+    } catch (e) {
+      console.error("Session check error on home:", e);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-between">
       {/* Navbar */}
@@ -11,18 +31,30 @@ export default function HomePage() {
             <span className="text-xl font-black text-gray-900 tracking-tight">ওষুধ রিমাইন্ডার</span>
           </Link>
           <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="px-4 py-2 text-gray-700 hover:text-green-700 font-bold text-sm rounded-xl transition-all"
-            >
-              লগইন
-            </Link>
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded-xl transition-all shadow-sm"
-            >
-              ড্যাশবোর্ড
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard"
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded-xl transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <span>ড্যাশবোর্ড</span>
+                <span>→</span>
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-gray-700 hover:text-green-700 font-bold text-sm rounded-xl transition-all"
+                >
+                  লগইন
+                </Link>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded-xl transition-all shadow-sm"
+                >
+                  শুরু করুন
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -44,10 +76,10 @@ export default function HomePage() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
           <Link
-            href="/onboarding"
+            href={isLoggedIn ? "/dashboard" : "/login"}
             className="w-full sm:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl text-lg shadow-lg shadow-green-600/30 transition-all active:scale-[0.98]"
           >
-            ব্যবহার শুরু করুন 🚀
+            {isLoggedIn ? "ড্যাশবোর্ডে প্রবেশ করুন 🚀" : "ব্যবহার শুরু করুন 🚀"}
           </Link>
           <Link
             href="/prescriptions/review"

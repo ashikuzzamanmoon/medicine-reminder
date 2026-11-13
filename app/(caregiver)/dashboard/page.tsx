@@ -34,6 +34,13 @@ export default function CaregiverDashboardPage() {
     fetchPatients();
   }, []);
 
+  const handleLogout = async () => {
+    if (confirm("আপনি কি নিশ্চিত যে অ্যাকাউন্ট থেকে লগআউট করতে চান?")) {
+      await fetch("/api/auth/logout", { method: "POST" });
+      window.location.href = "/login";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50/70 pb-16">
       {/* Top Navbar */}
@@ -50,6 +57,13 @@ export default function CaregiverDashboardPage() {
             >
               + নতুন রোগী যোগ
             </Link>
+            <button
+              onClick={handleLogout}
+              className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs sm:text-sm rounded-xl transition-all whitespace-nowrap"
+              title="লগআউট করুন"
+            >
+              লগআউট 🚪
+            </button>
           </div>
         </div>
       </header>
