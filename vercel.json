@@ -1,21 +1,12 @@
 {
   "crons": [
     {
-      "path": "/api/cron/send-reminders",
-      "schedule": "* * * * *"
-    },
-    {
-      "path": "/api/cron/missed-alerts",
-      "schedule": "*/5 * * * *"
+      "path": "/api/cron/generate-doses",
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/cron/refill-check",
       "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/generate-doses",
-      "schedule": "0 0 * * *"
     }
   ]
 }
-
