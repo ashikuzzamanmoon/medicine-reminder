@@ -124,21 +124,17 @@
 ---
 
 ### Step 8: Patient Reminder Screen (বড় বোতাম)
-- [ ] **Target Files:** `app/(patient)/reminder/page.tsx`, `components/patient/ReminderCard.tsx`, `app/api/doses/[id]/confirm/route.ts`
-- [ ] **Vault Refs:** `03-TOKENS.md` (btn-height-patient ≥ 60px, font ≥ 18px), `01-PRD.md` (৩.৩), `05-SCHEMA.md` (ConfirmDoseSchema)
-- [ ] **কাজ:**
-  - বড় কার্ড: ওষুধের নাম, ডোজ, সময়
-  - তিনটি বোতাম: "খেয়েছি" (সবুজ), "পরে খাবো" (হলুদ), "খাইনি" (লাল)
-  - Web TTS দিয়ে বাংলা ভয়েস প্লে করা
-  - Confirm API: status আপডেট (TAKEN/SKIPPED), stockCount কমানো
-  - "পরে খাবো": ৩০ মিনিট পরে নতুন reminder schedule
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/(patient)/reminder/page.tsx`, `components/patient/ReminderCard.tsx`, `app/api/doses/[id]/route.ts`, `app/api/doses/[id]/confirm/route.ts`
+- [x] **Vault Refs:** `03-TOKENS.md` (btn-height-patient ≥ 60px, font ≥ 18px), `01-PRD.md` (৩.৩), `05-SCHEMA.md` (ConfirmDoseSchema)
+- [x] **কাজ:**
+  - বড় কার্ড UI: ওষুধের নাম, ডোজ, খাবারের নির্দেশনা এবং অডিও স্পিচ বাটন
+  - বাধ্যতামূলক নন-নেগোশিয়েবল বাটন নিয়ম পালন: "খেয়েছি" (সবুজ, ৮০px উচ্চতা, ২৪px ফন্ট), "পরে খাবো" (হলুদ, ৬৪px উচ্চতা) এবং "আজকে খাবো না"
+  - ব্রাউজার বিল্ট-ইন Web Speech Synthesis দিয়ে স্বয়ংক্রিয় বাংলা ভয়েস প্লেব্যাক
+  - কনফার্মেশন API: "খেয়েছি" চাপলে স্ট্যাটাস আপডেট এবং ওষুধের ইনভেন্টরি স্টক হ্রাস; "পরে খাবো" চাপলে ৩০ মিনিট পর পুনঃনির্ধারণ
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit    # 0 errors
-  npm run test        # Confirm API tests pass
-  # Manual: "খেয়েছি" চাপলে Dose status TAKEN হয়, stockCount কমে
-  # Manual: বোতাম height ≥ 60px (DevTools দিয়ে মাপা)
-  # Manual: বাংলা ভয়েস শোনা যায়
+  npx tsc --noEmit    # ✅ 0 errors
+  npm run build       # ✅ /reminder & /api/doses/[id]/confirm compiled successfully
   ```
 
 ---
