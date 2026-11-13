@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { formatBanglaTime } from "@/lib/timezone";
+import { formatBanglaTime, formatBanglaVoiceTime } from "@/lib/timezone";
 
 interface DoseDetails {
   id: string;
@@ -50,7 +50,8 @@ export default function ReminderCard({ doseId }: { doseId: string }) {
           const isDue = now >= (scheduledTime - 15 * 60 * 1000); // ১৫ মিনিট আগে থেকে
 
           if (data.dose.status === "PENDING" && isDue) {
-            const text = `এখন আপনার ${medicine.name} খাওয়ার সময়। ডোজ ${medicine.dose}। ${timing}`;
+            const timeVoice = formatBanglaVoiceTime(data.dose.schedule.time);
+            const text = `${timeVoice} আপনার ${medicine.name} ওষুধ খাওয়ার সময়। পরিমাণ ${medicine.dose}। ${timing ? timing + " খাবেন।" : ""}`;
             speakReminder(text);
           }
         }
@@ -142,7 +143,10 @@ export default function ReminderCard({ doseId }: { doseId: string }) {
             </p>
           </div>
           <button
-            onClick={() => speakReminder(`এখন আপনার ${medicine.name} খাওয়ার সময়।`)}
+            onClick={() => {
+              const timeVoice = formatBanglaVoiceTime(dose.schedule.time);
+              speakReminder(`${timeVoice} আপনার ${medicine.name} ওষুধ খাওয়ার সময়। পরিমাণ ${medicine.dose}।`);
+            }}
             className="p-3 bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors"
             title="ভয়েস শুনুন"
           >

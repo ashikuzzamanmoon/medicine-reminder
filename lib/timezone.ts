@@ -90,3 +90,45 @@ export function formatBanglaTime(timeStr: string): string {
   return `${period} ${hoursBn}:${minutesBn}`;
 }
 
+/**
+ * Speech synthesis / ভয়েস ঘোষণার জন্য সময়কে স্বাভাবিক কথ্য বাংলায় রূপান্তর করে।
+ * উদাহরণ:
+ * "08:00" -> "সকাল ৮টায়"
+ * "19:53" -> "সন্ধ্যা ৭টা বেজে ৫৩ মিনিটে"
+ * "12:00" -> "দুপুর ১২টায়"
+ * "20:15" -> "রাত ৮টা বেজে ১৫ মিনিটে"
+ */
+export function formatBanglaVoiceTime(timeStr: string): string {
+  if (!timeStr) return "";
+  const [hoursStr, minutesStr] = timeStr.split(":");
+  const hours = parseInt(hoursStr, 10);
+  const minutes = parseInt(minutesStr || "0", 10);
+  if (isNaN(hours)) return timeStr;
+
+  let period = "সকাল";
+  if (hours >= 0 && hours < 5) period = "রাত";
+  else if (hours >= 5 && hours < 12) period = "সকাল";
+  else if (hours >= 12 && hours < 16) period = "দুপুর";
+  else if (hours >= 16 && hours < 18) period = "বিকাল";
+  else if (hours >= 18 && hours < 20) period = "সন্ধ্যা";
+  else period = "রাত";
+
+  const displayHours = hours % 12 === 0 ? 12 : hours % 12;
+
+  const toBn = (n: number | string) => {
+    const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return n
+      .toString()
+      .split("")
+      .map((d) => bnDigits[parseInt(d, 10)] ?? d)
+      .join("");
+  };
+
+  const hoursBn = toBn(displayHours);
+  if (minutes === 0) {
+    return `${period} ${hoursBn}টায়`;
+  }
+  const minutesBn = toBn(minutes);
+  return `${period} ${hoursBn}টা বেজে ${minutesBn} মিনিটে`;
+}
+

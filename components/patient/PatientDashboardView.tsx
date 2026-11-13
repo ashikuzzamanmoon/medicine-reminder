@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import PushNotificationManager from "@/components/PushNotificationManager";
-import { formatBanglaTime } from "@/lib/timezone";
+import { formatBanglaTime, formatBanglaVoiceTime } from "@/lib/timezone";
 
 interface PatientDashboardData {
   patient: {
@@ -241,12 +241,13 @@ export default function PatientDashboardView({
                       {/* Voice Button */}
                       <button
                         type="button"
-                        onClick={() =>
+                        onClick={() => {
+                          const timeVoice = formatBanglaVoiceTime(dose.schedule.time);
                           speakText(
-                            `এখন আপনার ${med.name} ওষুধ খাওয়ার সময়। পরিমাণ ${med.dose}। ${timingText} খাবেন।`,
+                            `${timeVoice} আপনার ${med.name} ওষুধ খাওয়ার সময়। পরিমাণ ${med.dose}। ${timingText ? timingText + " খাবেন।" : ""}`,
                             dose.id
-                          )
-                        }
+                          );
+                        }}
                         className={`px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors ${
                           speakingDoseId === dose.id
                             ? "bg-purple-600 text-white animate-pulse"

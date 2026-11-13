@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { sendPushNotification } from "@/lib/push";
+import { formatBanglaVoiceTime } from "@/lib/timezone";
 
 // Vercel Serverless-এ প্রতিবার রিয়েল-টাইম এক্সিকিউশন নিশ্চিত করতে force-dynamic
 export const dynamic = "force-dynamic";
@@ -95,6 +96,8 @@ export async function GET() {
             ? "খাবারের পরে"
             : "";
 
+        const timeVoice = formatBanglaVoiceTime(dose.schedule.time);
+
         // ১. রোগীর নিবন্ধিত ডিভাইসে পুশ পাঠানো
         for (const sub of patientUser.pushSubscriptions) {
           try {
@@ -108,9 +111,9 @@ export async function GET() {
               },
               {
                 title: `💊 ওষুধ খাওয়ার সময় হয়েছে`,
-                body: `${patientName}, এখন আপনার ${medicineName} (${doseAmount}) নেওয়ার সময়। ${timingText}`,
+                body: `${patientName}, ${timeVoice} আপনার ${medicineName} (${doseAmount}) নেওয়ার সময়। ${timingText}`,
                 url: `/reminder?doseId=${dose.id}`,
-                speakText: `${patientName}, এখন আপনার ${medicineName} ওষুধের সময়। ডোজ ${doseAmount}।`,
+                speakText: `${patientName}, ${timeVoice} আপনার ${medicineName} ওষুধের সময়। ডোজ ${doseAmount}।`,
                 tag: `dose-${dose.id}`,
                 type: "REMINDER",
                 showActions: true,
