@@ -1,0 +1,22 @@
+{
+  "name": "ওষুধ রিমাইন্ডার",
+  "short_name": "ওষুধ",
+  "description": "পরিবার-চালিত ওষুধের দেখাশোনা প্ল্যাটফর্ম",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F9FAFB",
+  "theme_color": "#16A34A",
+  "lang": "bn",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

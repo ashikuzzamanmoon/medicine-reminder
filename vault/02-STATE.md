@@ -9,10 +9,10 @@
 
 | ক্ষেত্র | মান |
 |---|---|
-| **Phase** | Phase 1: Project Foundation |
-| **Last Completed Step** | Step 2 — NextAuth.js + Phone OTP সেটআপ ✅ |
-| **Active Step** | Step 3: PWA + Web Push VAPID |
-| **Next Step** | Step 4: Patient প্রোফাইল তৈরির UI ও API |
+| **Phase** | Phase 2: Core Data & Auth UI |
+| **Last Completed Step** | Step 3 — PWA Manifest, Service Worker & Web Push VAPID ✅ |
+| **Active Step** | Step 4: Patient প্রোফাইল তৈরির UI ও API |
+| **Next Step** | Step 5: ওষুধ যোগ করার UI ও API |
 | **Active Blockers** | — |
 
 ---
@@ -23,6 +23,7 @@
 |---|---|---|---|
 | Step 1 | Next.js 14 + Prisma v5 + Neon DB সেটআপ | 2026-11-13 | tsc ✅ validate ✅ db push ✅ build ✅ |
 | Step 2 | NextAuth.js v5 + Google OAuth + Phone OTP Engine | 2026-11-13 | tsc ✅ build ✅ API endpoints generated ✅ |
+| Step 3 | PWA Manifest, Service Worker & Web Push VAPID Integration | 2026-11-13 | tsc ✅ build ✅ sw.js/manifest ✅ |
 
 ---
 

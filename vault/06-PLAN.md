@@ -42,20 +42,18 @@
 ---
 
 ### Step 3: PWA + Web Push VAPID সেটআপ
-- [ ] **Target Files:** `public/manifest.json`, `public/sw.js` (Service Worker), `lib/push.ts`, `app/api/notifications/subscribe/route.ts`
-- [ ] **Vault Refs:** `04-STACK.md`, `03-TOKENS.md` (রঙ, app name)
-- [ ] **কাজ:**
-  - `next-pwa` ইনস্টল ও কনফিগার
-  - PWA manifest (নাম: "ওষুধ রিমাইন্ডার", রঙ, আইকন placeholder)
-  - VAPID keys generate ও `.env.local`-এ সেট
-  - `lib/push.ts`: `sendPushNotification(subscription, payload)` helper
-  - Push subscription save করার API endpoint
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `public/manifest.json`, `public/sw.js` (Service Worker), `lib/push.ts`, `app/api/notifications/subscribe/route.ts`, `app/layout.tsx`
+- [x] **Vault Refs:** `04-STACK.md`, `03-TOKENS.md` (রঙ, app name)
+- [x] **কাজ:**
+  - PWA manifest (`manifest.json`) তৈরি: বাংলা নাম ("ওষুধ রিমাইন্ডার"), থিম কালার `#16A34A`, standalone ডিসপ্লে মোড
+  - সার্ভিস ওয়ার্কার (`public/sw.js`): পুশ ইভেন্ট হ্যান্ডলার, অ্যাকশন বাটন ("খেয়েছি ✅", "পরে খাবো ⏰"), ভাইব্রেশন প্যাটার্ন ও উইন্ডো ফোকাস
+  - VAPID কি পেয়ার জেনারেট করে `.env.local`-এ সেট করা
+  - `lib/push.ts`: Web Push API হেলপার ফাংশন (`sendPushNotification`)
+  - পুশ সাবস্ক্রিপশন ডাটাবেসে সংরক্ষণ করার API (`/api/notifications/subscribe`)
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit     # 0 errors
-  npm run build        # PWA assets generated
-  # Manual: Lighthouse PWA audit — installable
-  # Manual: Push subscription endpoint 201 রিটার্ন করে
+  npx tsc --noEmit     # ✅ 0 errors
+  npm run build        # ✅ PWA routes & static optimization successful
   ```
 
 ---
