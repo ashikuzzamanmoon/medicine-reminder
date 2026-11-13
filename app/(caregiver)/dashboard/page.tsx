@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PatientStatusCard from "@/components/caregiver/PatientStatusCard";
+import PushNotificationManager from "@/components/PushNotificationManager";
 
 interface PatientListItem {
   id: string;
@@ -61,6 +62,9 @@ export default function CaregiverDashboardPage() {
             পরিবারের সদস্যদের আজকের ওষুধের অবস্থা, অগ্রগতি ও মিসড অ্যালার্ট ট্র্যাকিং
           </p>
         </div>
+
+        {/* Push Notification Manager */}
+        <PushNotificationManager />
 
         {loading ? (
           <div className="space-y-6">

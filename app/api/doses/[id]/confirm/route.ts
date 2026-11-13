@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { z } from "zod";
+import { sendPushNotification } from "@/lib/push";
 
 const ConfirmActionSchema = z.object({
   status: z.enum(["TAKEN", "SKIPPED", "SNOOZE"]),
@@ -31,7 +32,11 @@ export async function POST(
       include: {
         schedule: {
           include: {
-            medicine: true,
+            medicine: {
+              include: {
+                patientProfile: true,
+              },
+            },
           },
         },
       },
@@ -76,15 +81,68 @@ export async function POST(
     });
 
     // ওষুধ খাওয়ার ফলে স্টক ১ কমানো (যদি স্টক কাউন্ট দেওয়া থাকে)
-    if (status === "TAKEN" && existingDose.schedule.medicine.stockCount !== null) {
-      const currentStock = existingDose.schedule.medicine.stockCount;
+    const medicine = existingDose.schedule.medicine;
+    if (status === "TAKEN" && medicine.stockCount !== null) {
+      const currentStock = medicine.stockCount;
       if (currentStock > 0) {
         await db.medicine.update({
-          where: { id: existingDose.schedule.medicineId },
+          where: { id: medicine.id },
           data: {
             stockCount: currentStock - 1,
           },
         });
+      }
+    }
+
+    // কেয়ারগিভার ও রোগীকে পুশ নোটিফিকেশন পাঠানো
+    if (status === "TAKEN") {
+      try {
+        const patientUserId = medicine.patientProfile.userId;
+        const patientUser = await db.user.findUnique({
+          where: { id: patientUserId },
+          include: { pushSubscriptions: true },
+        });
+
+        const caregiverLinks = await db.caregiverPatient.findMany({
+          where: { patientId: patientUserId },
+          include: {
+            caregiver: {
+              include: { pushSubscriptions: true },
+            },
+          },
+        });
+
+        const patientName = patientUser?.name || "রোগী";
+        const medicineName = medicine.name;
+        const dosage = medicine.dose;
+
+        const caregiverSubs = caregiverLinks.flatMap((link) => link.caregiver.pushSubscriptions);
+        const patientSubs = patientUser?.pushSubscriptions || [];
+
+        const allSubs = [...caregiverSubs, ...patientSubs];
+        const sentEndpoints = new Set<string>();
+
+        for (const sub of allSubs) {
+          if (sentEndpoints.has(sub.endpoint)) continue;
+          sentEndpoints.add(sub.endpoint);
+
+          await sendPushNotification(
+            {
+              endpoint: sub.endpoint,
+              keys: {
+                p256dh: sub.p256dh,
+                auth: sub.auth,
+              },
+            },
+            {
+              title: "✅ ওষুধ খাওয়া সম্পন্ন হয়েছে",
+              body: `${patientName} ${medicineName} (${dosage}) খেয়েছেন।`,
+              url: "/dashboard",
+            }
+          );
+        }
+      } catch (pushErr) {
+        console.error("Push notify error on confirm:", pushErr);
       }
     }
 
@@ -101,4 +159,3 @@ export async function POST(
     );
   }
 }
-
