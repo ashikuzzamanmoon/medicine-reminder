@@ -29,14 +29,20 @@ export default function PushNotificationManager() {
         setMessage("⚠️ ব্রাউজার সেটিংসে নোটিফিকেশন ব্লক (Denied) করা আছে। ব্রাউজারের সাইট সেটিংসে গিয়ে নোটিফিকেশন 'Allow' করুন।");
       }
 
-      // বিদ্যমান সাবস্ক্রিপশন চেক করা
-      navigator.serviceWorker.ready.then((reg) => {
-        reg.pushManager.getSubscription().then((sub) => {
+      // সার্ভিস ওয়ার্কার রেজিস্টার করা এবং সাবস্ক্রিপশন চেক করা
+      navigator.serviceWorker
+        .register("/sw.js", { scope: "/" })
+        .then((reg) => {
+          return reg.pushManager.getSubscription();
+        })
+        .then((sub) => {
           if (sub) {
             setSubscribed(true);
           }
+        })
+        .catch((err) => {
+          console.warn("SW check warning:", err);
         });
-      });
     }
   }, []);
 
@@ -44,6 +50,11 @@ export default function PushNotificationManager() {
     setLoading(true);
     setMessage(null);
     try {
+      if (!("serviceWorker" in navigator) || !("Notification" in window)) {
+        throw new Error("আপনার ব্রাউজারে পুশ নোটিফিকেশন সাপোর্ট করে না");
+      }
+
+      // ১. নোটিফিকেশন পারমিশন চাওয়া
       const perm = await Notification.requestPermission();
       setPermission(perm);
 
@@ -53,22 +64,28 @@ export default function PushNotificationManager() {
         return;
       }
 
-      // ১. VAPID পাবলিক কি আনা
+      // ২. সার্ভিস ওয়ার্কার রেজিস্ট্রেশন নিশ্চিত করা
+      const reg = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+      await navigator.serviceWorker.ready;
+
+      // ৩. VAPID পাবলিক কি আনা
       const vapidRes = await fetch("/api/notifications/vapid-key");
       const { publicKey } = await vapidRes.json();
 
       if (!publicKey) {
-        throw new Error("VAPID পাবলিক কি পাওয়া যায়নি");
+        throw new Error("সার্ভার থেকে VAPID কি পাওয়া যায়নি");
       }
 
-      // ২. সার্ভিস ওয়ার্কার থেকে সাবস্ক্রাইব করা
-      const reg = await navigator.serviceWorker.ready;
-      const sub = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicKey),
-      });
+      // ৪. সাবস্ক্রিপশন তৈরি বা রিট্রিভ করা
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) {
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(publicKey),
+        });
+      }
 
-      // ৩. সার্ভারে সেভ করা
+      // ৫. সার্ভারে সেভ করা
       const subJSON = sub.toJSON();
       const saveRes = await fetch("/api/notifications/subscribe", {
         method: "POST",
@@ -83,11 +100,13 @@ export default function PushNotificationManager() {
         setSubscribed(true);
         setMessage("✅ নোটিফিকেশন সফলভাবে চালু হয়েছে! নির্ধারিত সময়ে অ্যালার্ট পাবেন।");
       } else {
-        setMessage("❌ সাবস্ক্রিপশন সেভ করতে সমস্যা হয়েছে।");
+        const errorData = await saveRes.json();
+        setMessage(`❌ সাবস্ক্রিপশন সেভ হয়নি: ${errorData.error || "সার্ভার এরর"}`);
       }
     } catch (err) {
       console.error("Push subscribe error:", err);
-      setMessage("❌ নোটিফিকেশন সক্রিয় করতে সমস্যা হয়েছে।");
+      const errMsg = err instanceof Error ? err.message : "নোটিফিকেশন সক্রিয় করতে সমস্যা হয়েছে";
+      setMessage(`❌ ${errMsg}`);
     } finally {
       setLoading(false);
     }
