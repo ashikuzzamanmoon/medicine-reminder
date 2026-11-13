@@ -116,13 +116,15 @@ export async function POST(
         const medicineName = medicine.name;
         const dosage = medicine.dose;
 
-        const caregiverSubs = caregiverLinks.flatMap((link) => link.caregiver.pushSubscriptions);
-        const patientSubs = patientUser?.pushSubscriptions || [];
+        // রোগী নিজে বাটন চাপার পর রোগীর ফোনে আর পুশ পাঠানোর প্রয়োজন নেই (স্ক্রিনেই তিনি কনফার্মেশন দেখতে পান)
+        // নোটিফিকেশন শুধুমাত্র দায়িত্বপ্রাপ্ত কেয়ারগিভারদের কাছে যাবে, যেন তারা নিশ্চিন্ত হতে পারেন
+        const caregiverSubs = caregiverLinks
+          .filter((link) => link.caregiverId !== patientUser?.id)
+          .flatMap((link) => link.caregiver.pushSubscriptions);
 
-        const allSubs = [...caregiverSubs, ...patientSubs];
         const sentEndpoints = new Set<string>();
 
-        for (const sub of allSubs) {
+        for (const sub of caregiverSubs) {
           if (sentEndpoints.has(sub.endpoint)) continue;
           sentEndpoints.add(sub.endpoint);
 
