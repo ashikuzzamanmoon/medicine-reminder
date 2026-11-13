@@ -44,7 +44,11 @@ export default function EditMedicineModal({
         setName(med.name || "");
         setDose(med.dose || "");
         setFoodTiming(med.foodTiming || "AFTER");
-        setStockCount(med.stockCount !== null && med.stockCount !== undefined ? String(med.stockCount) : "");
+        setStockCount(
+          med.stockCount !== null && med.stockCount !== undefined
+            ? String(med.stockCount)
+            : ""
+        );
         setNotes(med.notes || "");
         if (med.schedules && med.schedules.length > 0) {
           setSchedules(
@@ -137,24 +141,29 @@ export default function EditMedicineModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150 my-8">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white rounded-3xl max-w-lg w-full max-h-[92vh] flex flex-col p-4 sm:p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150 my-auto">
         {/* Header */}
-        <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+        <div className="flex justify-between items-center pb-3 border-b border-gray-100 shrink-0">
           <div>
-            <h3 className="text-xl font-black text-gray-900">ওষুধের তথ্য পরিবর্তন</h3>
-            <p className="text-xs text-gray-500 mt-0.5">সময়সূচি ও অন্যান্য তথ্য এডিট করুন</p>
+            <h3 className="text-lg sm:text-xl font-black text-gray-900">
+              ওষুধের তথ্য পরিবর্তন
+            </h3>
+            <p className="text-xs text-gray-500 mt-0.5">
+              সময়সূচি ও অন্যান্য তথ্য এডিট করুন
+            </p>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+            className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
           >
             ✕
           </button>
         </div>
 
         {error && (
-          <div className="mt-4 p-3 bg-red-50 text-red-700 text-xs sm:text-sm rounded-xl font-medium border border-red-200">
+          <div className="mt-3 p-3 bg-red-50 text-red-700 text-xs sm:text-sm rounded-xl font-medium border border-red-200 shrink-0">
             {error}
           </div>
         )}
@@ -164,151 +173,157 @@ export default function EditMedicineModal({
             তথ্য লোড হচ্ছে...
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-            {/* Name */}
-            <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1">
-                ওষুধের নাম <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="যেমন: Napa Extra / Seclo 20 mg"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-semibold focus:ring-2 focus:ring-green-500 outline-none"
-              />
-            </div>
-
-            {/* Dose & Food Timing */}
-            <div className="grid grid-cols-2 gap-3">
+          <form onSubmit={handleSubmit} className="mt-4 flex flex-col flex-1 overflow-hidden">
+            {/* Scrollable Form Body */}
+            <div className="overflow-y-auto flex-1 pr-1 space-y-4">
+              {/* Name */}
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1">
-                  ডোজ <span className="text-red-500">*</span>
+                  ওষুধের নাম <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  value={dose}
-                  onChange={(e) => setDose(e.target.value)}
-                  placeholder="১টি ট্যাবলেট"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="যেমন: Napa Extra / Seclo 20 mg"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-semibold focus:ring-2 focus:ring-green-500 outline-none"
                 />
               </div>
 
+              {/* Dose & Food Timing */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    ডোজ <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={dose}
+                    onChange={(e) => setDose(e.target.value)}
+                    placeholder="১টি ট্যাবলেট"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    খাবারের সাথে সময়
+                  </label>
+                  <select
+                    value={foodTiming}
+                    onChange={(e) => setFoodTiming(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:ring-2 focus:ring-green-500 outline-none"
+                  >
+                    <option value="BEFORE">খাবারের আগে</option>
+                    <option value="AFTER">খাবারের পরে</option>
+                    <option value="ANY">যেকোনো সময়</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Schedules with 12-hour Bangla preview */}
+              <div className="pt-1">
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-xs font-bold text-gray-700">
+                    খাওয়ার সময়সূচি <span className="text-red-500">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={addScheduleTime}
+                    className="text-xs font-bold text-green-700 bg-green-50 hover:bg-green-100 px-2.5 py-1 rounded-lg transition-colors"
+                  >
+                    + সময় যোগ
+                  </button>
+                </div>
+
+                <div className="space-y-2.5">
+                  {schedules.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3 bg-gray-50 rounded-2xl border border-gray-200 flex flex-col gap-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="time"
+                          required
+                          value={item.time}
+                          onChange={(e) => updateSchedule(idx, "time", e.target.value)}
+                          className="w-32 sm:w-36 px-2.5 py-1.5 bg-white rounded-xl border border-gray-300 text-xs sm:text-sm font-bold text-gray-800 outline-none shrink-0"
+                        />
+                        <input
+                          type="text"
+                          placeholder="লেবেল (যেমন: সকাল)"
+                          value={item.label}
+                          onChange={(e) => updateSchedule(idx, "label", e.target.value)}
+                          className="flex-1 min-w-0 px-2.5 py-1.5 bg-white rounded-xl border border-gray-300 text-xs outline-none"
+                        />
+                        {schedules.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeScheduleTime(idx)}
+                            className="w-7 h-7 flex items-center justify-center text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg text-xs font-bold shrink-0 transition-colors"
+                            title="মুছে ফেলুন"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                      {/* Live 12-hour Bangla Preview */}
+                      <div className="text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 w-fit">
+                        <span>🕒 বাংলা সময়:</span>
+                        <span className="font-bold">{formatBanglaTime(item.time)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stock Count */}
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1">
-                  খাবারের সাথে সময়
+                  বর্তমান স্টক (ট্যাবলেট সংখ্যা)
                 </label>
-                <select
-                  value={foodTiming}
-                  onChange={(e) => setFoodTiming(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:ring-2 focus:ring-green-500 outline-none"
-                >
-                  <option value="BEFORE">খাবারের আগে</option>
-                  <option value="AFTER">খাবারের পরে</option>
-                  <option value="ANY">যেকোনো সময়</option>
-                </select>
+                <input
+                  type="number"
+                  min="0"
+                  value={stockCount}
+                  onChange={(e) => setStockCount(e.target.value)}
+                  placeholder="যেমন: ৩০"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                />
               </div>
             </div>
 
-            {/* Schedules with 12-hour Bangla preview */}
-            <div className="pt-2">
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-xs font-bold text-gray-700">
-                  খাওয়ার সময়সূচি <span className="text-red-500">*</span>
-                </label>
-                <button
-                  type="button"
-                  onClick={addScheduleTime}
-                  className="text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-lg hover:bg-green-100 transition-colors"
-                >
-                  + সময় যোগ
-                </button>
-              </div>
-
-              <div className="space-y-2.5 max-h-48 overflow-y-auto pr-1">
-                {schedules.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3 bg-gray-50 rounded-2xl border border-gray-200 flex flex-col gap-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="time"
-                        required
-                        value={item.time}
-                        onChange={(e) => updateSchedule(idx, "time", e.target.value)}
-                        className="px-3 py-1.5 bg-white rounded-xl border border-gray-300 text-sm font-bold text-gray-800 outline-none w-32"
-                      />
-                      <input
-                        type="text"
-                        placeholder="লেবেল (যেমন: সকাল)"
-                        value={item.label}
-                        onChange={(e) => updateSchedule(idx, "label", e.target.value)}
-                        className="flex-1 px-3 py-1.5 bg-white rounded-xl border border-gray-300 text-xs outline-none"
-                      />
-                      {schedules.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeScheduleTime(idx)}
-                          className="text-red-500 hover:text-red-700 p-1.5 text-xs font-bold"
-                          title="মুছে ফেলুন"
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
-                    {/* Live 12-hour Bangla Preview */}
-                    <div className="text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5">
-                      <span>🕒 বাংলা সময়:</span>
-                      <span className="font-bold">{formatBanglaTime(item.time)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Stock Count */}
-            <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1">
-                বর্তমান স্টক (ট্যাবলেট সংখ্যা)
-              </label>
-              <input
-                type="number"
-                min="0"
-                value={stockCount}
-                onChange={(e) => setStockCount(e.target.value)}
-                placeholder="যেমন: ৩০"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-green-500 outline-none"
-              />
-            </div>
-
-            {/* Actions */}
-            <div className="pt-4 flex items-center justify-between gap-3 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={handleDelete}
-                disabled={deleting || saving}
-                className="px-4 py-2.5 text-red-600 hover:bg-red-50 font-bold rounded-xl text-xs sm:text-sm transition-colors disabled:opacity-50"
-              >
-                {deleting ? "মুছে ফেলা হচ্ছে..." : "ওষুধ মুছুন 🗑️"}
-              </button>
-
+            {/* Actions Footer */}
+            <div className="pt-3 mt-3 border-t border-gray-100 shrink-0 space-y-2">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2.5 text-gray-600 hover:bg-gray-100 font-bold rounded-xl text-xs sm:text-sm transition-colors"
+                  className="flex-1 py-2.5 px-4 text-gray-600 bg-gray-100 hover:bg-gray-200 font-bold rounded-xl text-xs sm:text-sm transition-colors text-center"
                 >
                   বাতিল
                 </button>
                 <button
                   type="submit"
                   disabled={saving || deleting}
-                  className="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-black rounded-xl text-xs sm:text-sm shadow-md transition-all disabled:opacity-50 active:scale-95"
+                  className="flex-1 py-2.5 px-4 bg-green-600 hover:bg-green-700 text-white font-black rounded-xl text-xs sm:text-sm shadow-md transition-all disabled:opacity-50 active:scale-95 text-center whitespace-nowrap"
                 >
                   {saving ? "সংরক্ষণ হচ্ছে..." : "সংরক্ষণ করুন ✅"}
+                </button>
+              </div>
+
+              {/* Danger Action on its own clean row */}
+              <div className="text-center pt-1">
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={deleting || saving}
+                  className="text-xs text-red-600 hover:text-red-700 font-bold hover:underline transition-colors disabled:opacity-50 inline-flex items-center gap-1"
+                >
+                  {deleting ? "মুছে ফেলা হচ্ছে..." : "🗑️ এই ওষুধটি তালিকা থেকে মুছে ফেলুন"}
                 </button>
               </div>
             </div>
@@ -318,4 +333,3 @@ export default function EditMedicineModal({
     </div>
   );
 }
-

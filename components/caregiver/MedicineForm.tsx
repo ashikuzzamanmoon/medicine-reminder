@@ -242,20 +242,20 @@ export default function MedicineForm() {
                   required
                   value={item.time}
                   onChange={(e) => updateSchedule(idx, "time", e.target.value)}
-                  className="w-36 px-3 py-2 bg-white rounded-xl border border-gray-300 text-sm outline-none font-bold text-gray-800"
+                  className="w-32 sm:w-36 px-2.5 py-1.5 bg-white rounded-xl border border-gray-300 text-xs sm:text-sm outline-none font-bold text-gray-800 shrink-0"
                 />
                 <input
                   type="text"
                   placeholder="লেবেল (যেমন: সকাল)"
                   value={item.label}
                   onChange={(e) => updateSchedule(idx, "label", e.target.value)}
-                  className="flex-1 px-3 py-2 bg-white rounded-xl border border-gray-300 text-sm outline-none"
+                  className="flex-1 min-w-0 px-2.5 py-1.5 bg-white rounded-xl border border-gray-300 text-xs outline-none"
                 />
                 {schedules.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeScheduleTime(idx)}
-                    className="text-red-500 hover:text-red-700 p-2 text-sm font-bold"
+                    className="w-7 h-7 flex items-center justify-center text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg text-xs font-bold shrink-0 transition-colors"
                     title="মুছে ফেলুন"
                   >
                     ✕
