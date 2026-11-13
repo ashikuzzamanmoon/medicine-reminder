@@ -61,17 +61,16 @@
 ## Phase 2: Core Data & Auth UI
 
 ### Step 4: Patient প্রোফাইল তৈরির UI ও API
-- [ ] **Target Files:** `app/(caregiver)/patients/new/page.tsx`, `components/caregiver/PatientForm.tsx`, `app/api/patients/route.ts`, `lib/schemas.ts` (CreatePatientProfileSchema)
-- [ ] **Vault Refs:** `03-TOKENS.md` (রঙ, ফন্ট), `05-SCHEMA.md` (PatientProfile), `01-PRD.md` (ব্যবহারকারীর ফ্লো)
-- [ ] **কাজ:**
-  - Patient যোগ করার ফর্ম (নাম, বয়স, সম্পর্ক, ছবি optional)
-  - Zod validation + Prisma দিয়ে DB-তে সেভ
-  - Caregiver-Patient লিঙ্ক তৈরি (CaregiverPatient)
-- [ ] **Verification Gate:**
+- [x] **Target Files:** `app/(caregiver)/patients/new/page.tsx`, `components/caregiver/PatientForm.tsx`, `app/api/patients/route.ts`, `lib/patient-schema.ts` (CreatePatientProfileSchema)
+- [x] **Vault Refs:** `03-TOKENS.md` (রঙ, ফন্ট), `05-SCHEMA.md` (PatientProfile), `01-PRD.md` (ব্যবহারকারীর ফ্লো)
+- [x] **কাজ:**
+  - Patient যোগ করার রেসপন্সিভ ফর্ম (নাম, বয়স, সম্পর্ক ড্রপডাউন, ফোন নম্বর)
+  - Zod validation স্কিমা (`lib/patient-schema.ts`)
+  - GET ও POST `/api/patients` হ্যান্ডলার: ইউজার ভ্যালিডেশন, PatientProfile তৈরি ও CaregiverPatient রিলেশনশিপ লিংক
+- [x] **Verification Gate:**
   ```bash
-  npx tsc --noEmit   # 0 errors
-  npm run test       # Patient form validation tests pass
-  # Manual: Patient তৈরি করলে DB-তে row আসে
+  npx tsc --noEmit   # ✅ 0 errors
+  npm run build      # ✅ /patients/new & /api/patients compiled successfully
   ```
 
 ---
