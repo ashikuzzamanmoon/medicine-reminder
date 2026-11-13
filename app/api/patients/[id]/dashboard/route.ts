@@ -9,30 +9,34 @@ export async function GET(
   try {
     const patientUserId = params.id;
 
-    const patient = await db.user.findUnique({
-      where: { id: patientUserId },
-      include: {
-        // PatientProfile
-      },
-    });
-
-    if (!patient) {
-      return NextResponse.json({ error: "রোগী পাওয়া যায়নি" }, { status: 404 });
-    }
-
-    const profile = await db.patientProfile.findUnique({
-      where: { userId: patientUserId },
-      include: {
-        medicines: {
-          where: { isActive: true },
-          include: {
-            schedules: {
-              where: { isActive: true },
+    // প্যারালালভাবে ইউজার ও প্রোফাইল কোয়েরি করা
+    const [patient, profile] = await Promise.all([
+      db.user.findUnique({
+        where: { id: patientUserId },
+      }),
+      db.patientProfile.findFirst({
+        where: {
+          OR: [{ userId: patientUserId }, { id: patientUserId }],
+        },
+        include: {
+          medicines: {
+            where: { isActive: true },
+            include: {
+              schedules: {
+                where: { isActive: true },
+              },
             },
           },
         },
-      },
-    });
+      }),
+    ]);
+
+    if (!patient && !profile) {
+      return NextResponse.json({ error: "রোগী পাওয়া যায়নি" }, { status: 404 });
+    }
+
+    const patientName = patient?.name || "রোগী";
+    const patientPhone = patient?.phone || null;
 
     // আজকের দিনের শুরু ও শেষ
     const startOfDay = new Date();
@@ -41,30 +45,33 @@ export async function GET(
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
 
-    // যদি আজকের কোনো ডোজ এখনও তৈরি না হয়ে থাকে, তাহলে স্বয়ংক্রিয়ভাবে তৈরি করে নেওয়া
-    let todayDoses = await db.dose.findMany({
-      where: {
-        scheduledAt: {
-          gte: startOfDay,
-          lte: endOfDay,
-        },
-        schedule: {
-          medicine: {
-            patientProfileId: profile?.id,
+    // আজকের ডোজ বের করা
+    let todayDoses = profile?.id
+      ? await db.dose.findMany({
+          where: {
+            scheduledAt: {
+              gte: startOfDay,
+              lte: endOfDay,
+            },
+            schedule: {
+              medicine: {
+                patientProfileId: profile.id,
+              },
+            },
           },
-        },
-      },
-      include: {
-        schedule: {
           include: {
-            medicine: true,
+            schedule: {
+              include: {
+                medicine: true,
+              },
+            },
           },
-        },
-      },
-      orderBy: { scheduledAt: "asc" },
-    });
+          orderBy: { scheduledAt: "asc" },
+        })
+      : [];
 
-    if (todayDoses.length === 0) {
+    // যদি ওষুধ থাকে কিন্তু আজকের কোনো ডোজ তৈরি না হয়ে থাকে
+    if (profile && profile.medicines.length > 0 && todayDoses.length === 0) {
       await generateDosesForDate(new Date());
       todayDoses = await db.dose.findMany({
         where: {
@@ -74,7 +81,7 @@ export async function GET(
           },
           schedule: {
             medicine: {
-              patientProfileId: profile?.id,
+              patientProfileId: profile.id,
             },
           },
         },
@@ -97,10 +104,10 @@ export async function GET(
     return NextResponse.json({
       success: true,
       patient: {
-        id: patient.id,
-        name: patient.name,
-        phone: patient.phone,
-        age: profile?.age,
+        id: patient?.id || patientUserId,
+        name: patientName,
+        phone: patientPhone,
+        age: profile?.age ?? null,
       },
       summary: {
         total: totalDoses,

@@ -68,28 +68,32 @@ export async function GET() {
       }
     }
 
-    const patients = await Promise.all(
-      links.map(async (link) => {
-        const profile = await db.patientProfile.findUnique({
-          where: { userId: link.patientId },
-          include: {
-            medicines: {
-              where: { isActive: true },
-            },
-          },
-        });
-        return {
-          id: link.patient.id,
-          profileId: profile?.id ?? link.patient.id,
-          name: link.patient.name,
-          phone: link.patient.phone,
-          relation: link.relation,
-          age: profile?.age ?? null,
-          image: profile?.image ?? null,
-          medicinesCount: profile?.medicines.length ?? 0,
-        };
-      })
-    );
+    // সব প্রোফাইল একবারেই ব্যাচ কোয়েরিতে নিয়ে আসা
+    const patientIds = links.map((l) => l.patientId);
+    const profiles = await db.patientProfile.findMany({
+      where: { userId: { in: patientIds } },
+      include: {
+        medicines: {
+          where: { isActive: true },
+        },
+      },
+    });
+
+    const profileMap = new Map(profiles.map((p) => [p.userId, p]));
+
+    const patients = links.map((link) => {
+      const profile = profileMap.get(link.patientId);
+      return {
+        id: link.patient.id,
+        profileId: profile?.id ?? link.patient.id,
+        name: link.patient.name,
+        phone: link.patient.phone,
+        relation: link.relation,
+        age: profile?.age ?? null,
+        image: profile?.image ?? null,
+        medicinesCount: profile?.medicines.length ?? 0,
+      };
+    });
 
     return NextResponse.json({ success: true, patients });
   } catch (error) {
